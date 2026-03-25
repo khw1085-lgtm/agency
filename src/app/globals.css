@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
   --color-background: #f7f6f2; /* Light beige noise-like background */
@@ -43,7 +44,7 @@ body::before {
 .input-focus-effect:hover,
 .input-focus-effect:focus {
   border-style: solid !important;
-  border-color: #ffde00 !important;
+  border-color: currentColor !important;
   outline: none;
 }
 

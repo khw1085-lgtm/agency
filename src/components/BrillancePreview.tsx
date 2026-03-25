@@ -2,16 +2,16 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import SmartSimpleBrilliant from "./work_01/smart-simple-brilliant"
-import YourWorkInSync from "./work_01/your-work-in-sync"
-import EffortlessIntegration from "./work_01/effortless-integration-updated"
-import NumbersThatSpeak from "./work_01/numbers-that-speak"
-import DocumentationSection from "./work_01/documentation-section"
-import TestimonialsSection from "./work_01/testimonials-section"
-import FAQSection from "./work_01/faq-section"
-import PricingSection from "./work_01/pricing-section"
-import CTASection from "./work_01/cta-section"
-import FooterSection from "./work_01/footer-section"
+import SmartSimpleBrilliant from "./work/work_01/smart-simple-brilliant"
+import YourWorkInSync from "./work/work_01/your-work-in-sync"
+import EffortlessIntegration from "./work/work_01/effortless-integration-updated"
+import NumbersThatSpeak from "./work/work_01/numbers-that-speak"
+import DocumentationSection from "./work/work_01/documentation-section"
+import TestimonialsSection from "./work/work_01/testimonials-section"
+import FAQSection from "./work/work_01/faq-section"
+import PricingSection from "./work/work_01/pricing-section"
+import CTASection from "./work/work_01/cta-section"
+import FooterSection from "./work/work_01/footer-section"
 
 // Reusable Badge Component
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
