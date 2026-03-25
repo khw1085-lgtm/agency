@@ -316,53 +316,98 @@ export default function Home() {
         <AnimatePresence>
           {selectedProject && (
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ clipPath: "inset(0 0 100% 0)", y: "-4%" }}
+              animate={{ clipPath: "inset(0 0 0% 0)", y: "0%" }}
+              exit={{ clipPath: "inset(100% 0 0% 0)", y: "2%" }}
+              transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
               data-lenis-prevent
               className={cn(
                 "fixed inset-0 z-[9999] overflow-y-auto scrollbar-hide",
                 theme === "dark" ? "bg-[#111111] text-white" : "bg-[#f7f6f2] text-black"
               )}
             >
-              {/* 고정된 닫기 버튼 */}
-              <button
-                onClick={() => setSelectedProject(null)}
+              {/* ── 상세페이지 헤더 (sticky top-0, 80px) ── */}
+              <div
                 className={cn(
-                  "fixed top-8 right-8 md:top-16 md:right-16 z-[10000] group flex items-center gap-3 uppercase font-bold text-xs tracking-widest hover:opacity-50 transition-all px-4 py-2 rounded-full",
-                  theme === "dark" ? "bg-white/10 text-white" : "bg-black/5 text-black"
+                  "sticky top-0 z-[10001] w-full h-[80px] flex items-center justify-between px-6 md:px-8 border-b backdrop-blur-md",
+                  theme === "dark"
+                    ? "bg-[#111111]/80 border-white/10 text-white"
+                    : "bg-[#f7f6f2]/80 border-black/8 text-black"
                 )}
               >
-                Close <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-              </button>
+                {/* 좌측: 인덱스 + 프로젝트명 */}
+                <div className="flex items-center gap-6">
+                  <span className={cn(
+                    "text-[11px] font-bold uppercase tracking-[0.25em] opacity-40",
+                    theme === "dark" ? "text-white" : "text-black"
+                  )}>
+                    {selectedProject.id} / 12
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className={cn(
+                      "hidden md:block text-[13px] font-bold uppercase tracking-[0.15em]",
+                      theme === "dark" ? "text-white" : "text-black"
+                    )}>
+                      {selectedProject.title}
+                    </span>
+                    <span className={cn(
+                      "hidden md:block text-[11px] font-medium uppercase tracking-[0.1em] opacity-30",
+                      theme === "dark" ? "text-white" : "text-black"
+                    )}>|</span>
+                    <span className={cn(
+                      "hidden md:block text-[11px] font-medium uppercase tracking-[0.1em] opacity-30",
+                      theme === "dark" ? "text-white" : "text-black"
+                    )}>
+                      {selectedProject.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 우측: Close 버튼 */}
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className={cn(
+                    "group flex items-center gap-2 uppercase font-bold text-xs tracking-widest hover:opacity-50 transition-all px-4 py-2 rounded-full",
+                    theme === "dark" ? "bg-white/10 text-white" : "bg-black/5 text-black"
+                  )}
+                >
+                  Close <X className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+              </div>
 
               {/* ── max-w-[1500px] 단일 래퍼: 타이틀 + 프레임 정렬 통일 ── */}
               <div className="w-full max-w-[1500px] mx-auto">
 
-                {/* 타이틀: 컴팩트 1줄 → 스크롤 즉시 sticky 동작 */}
-                <div className="w-full px-6 md:px-8 pt-6 pb-4 flex items-baseline gap-6">
-                  <span className={cn(
-                    "text-[11px] font-bold uppercase tracking-widest opacity-40",
-                    theme === "dark" ? "text-white" : "text-black"
-                  )}>Project</span>
-                  <h1 className={cn(
-                    "text-[22px] md:text-[28px] font-bold uppercase tracking-tight",
-                    theme === "dark" ? "text-white" : "text-black"
-                  )}>
+                {/* ── 타이틀 섹션 (높이 320px로 조정) ── */}
+                <div
+                  className="w-full px-6 md:px-8 flex flex-col justify-end"
+                  style={{ height: 320, paddingBottom: 60 }}
+                >
+                  {/* 중앙: 대형 프로젝트 제목 — fluid 폰트로 overflow 방지 */}
+                  <h1
+                    className={cn(
+                      "font-bold uppercase tracking-tight leading-none mb-8",
+                      theme === "dark" ? "text-white" : "text-black"
+                    )}
+                    style={{ fontSize: "clamp(36px, 5vw, 72px)" }}
+                  >
                     {selectedProject.title}
                   </h1>
-                  <span className={cn(
-                    "text-[11px] font-medium uppercase opacity-30 hidden md:block",
+
+                  {/* 하단: 서브텍스트 */}
+                  <p className={cn(
+                    "text-[13px] md:text-[14px] leading-[1.9] uppercase opacity-40 font-medium max-w-2xl",
                     theme === "dark" ? "text-white" : "text-black"
-                  )}>{selectedProject.category}</span>
+                  )}>
+                    Elevating the brand&apos;s digital presence through a meticulous alignment of sophisticated motion and architectural minimalism. Delivering a seamless experience across all platforms.
+                  </p>
                 </div>
 
-                {/* ── 브라우저 프레임 (sticky top-0 → 스크롤 즉시 고정) ── */}
+                {/* ── 브라우저 프레임 (sticky top-[80px] → 헤더 아래에 걸림) ── */}
                 <div
                   className={cn(
-                    "sticky top-0 z-10 flex flex-col border overflow-hidden",
-                    "h-[calc(100vh-4px)] md:h-screen",
+                    "sticky top-[80px] z-10 flex flex-col border overflow-hidden",
+                    "h-[calc(100vh-80px)]",
                     theme === "dark" ? "bg-black border-white/20" : "bg-[#fdfdfd] border-black"
                   )}
                 >
@@ -371,7 +416,7 @@ export default function Home() {
                     "w-full h-14 flex items-center justify-between px-6 border-b shrink-0",
                     theme === "dark" ? "bg-black/40 border-white/10" : "bg-white/80 backdrop-blur-md border-black/5"
                   )}>
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
                       {/* 더미 윈도우 컨트롤 */}
                       <div className="hidden md:flex gap-2">
                         <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
@@ -380,39 +425,12 @@ export default function Home() {
                       </div>
                       {/* 주소창 스타일의 컨트롤러 */}
                       <div className={cn(
-                        "flex items-center gap-3 px-4 py-2 rounded-xl text-[11px] font-medium min-w-[280px] md:min-w-[400px]",
+                        "flex items-center gap-3 px-4 py-2 rounded-xl text-[11px] font-medium flex-1 min-w-0",
                         theme === "dark" ? "bg-white/5 text-white/40" : "bg-[#f3f3f3] text-black/40"
                       )}>
                         <div className="flex items-center gap-3">
                           <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-black dark:hover:text-white" />
                           <ChevronRight className="w-4 h-4 cursor-pointer hover:text-black dark:hover:text-white" />
-                        </div>
-                        <div className="flex items-center gap-1.5 ml-2">
-                          <button
-                            onClick={() => setProjectViewMode("mobile")}
-                            className={cn(
-                              "p-1.5 px-2.5 rounded-lg transition-all flex items-center gap-2",
-                              projectViewMode === "mobile"
-                                ? "text-[#3b82f6] bg-[#3b82f6]/10 shadow-sm"
-                                : "hover:text-black dark:hover:text-white"
-                            )}
-                          >
-                            <Smartphone className="w-4 h-4" />
-                            {projectViewMode === "mobile" && <span className="text-[10px] font-bold">MOBILE</span>}
-                          </button>
-                          <span className="opacity-10">|</span>
-                          <button
-                            onClick={() => setProjectViewMode("desktop")}
-                            className={cn(
-                              "p-1.5 px-2.5 rounded-lg transition-all flex items-center gap-2",
-                              projectViewMode === "desktop"
-                                ? "text-[#3b82f6] bg-[#3b82f6]/10 shadow-sm"
-                                : "hover:text-black dark:hover:text-white"
-                            )}
-                          >
-                            <Monitor className="w-4 h-4" />
-                            {projectViewMode === "desktop" && <span className="text-[10px] font-bold">DESKTOP</span>}
-                          </button>
                         </div>
                         <span className="mx-2 opacity-10">/</span>
                         <span className="truncate flex-1 tracking-tight">/{selectedProject.title.toLowerCase().replace(/\s+/g, '-')}</span>
@@ -462,7 +480,7 @@ export default function Home() {
                       {selectedProject.id === "01" ? (
                         <BrillancePreview theme={theme} />
                       ) : selectedProject.id === "02" ? (
-                        <div className="w-full bg-white text-black text-left flex flex-col items-center work-02-preview">
+                        <div className="w-full bg-white text-black text-left flex flex-col work-02-preview">
                           <Work02Preview />
                         </div>
                       ) : (

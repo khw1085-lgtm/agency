@@ -72,7 +72,7 @@ export const BankingScaleHero = () => {
   // @return
   return (
     <div className="w-full overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl px-8 py-24 pt-16">
+      <div className="mx-auto w-full px-8 py-24 pt-16">
         <div className="grid grid-cols-12 gap-5 gap-y-16">
           <div className="col-span-12 md:col-span-6 relative z-10">
             <div
@@ -193,15 +193,32 @@ export const BankingScaleHero = () => {
                         backgroundColor: "rgba(22, 126, 108, 0.01)",
                       }}
                     >
+                      {/* 루프 float 애니메이션 (보이게 된 후 시작) */}
+                      {isVisible && (
+                        <motion.div
+                          className="absolute inset-0 w-full h-full rounded-[3px]"
+                          animate={{
+                            y: point.direction === "down"
+                              ? [0, -12, 0, -6, 0]
+                              : [0, 12, 0, 6, 0],
+                            opacity: [1, 0.6, 1, 0.8, 1],
+                          }}
+                          transition={{
+                            duration: 3 + (point.id % 5) * 0.4,
+                            delay: point.delay + 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                          style={{
+                            background: "inherit",
+                          }}
+                        />
+                      )}
                       <motion.div
-                        initial={{
-                          opacity: 0,
-                        }}
+                        initial={{ opacity: 0 }}
                         animate={
                           isVisible
-                            ? {
-                                opacity: [0, 1],
-                              }
+                            ? { opacity: [0, 1] }
                             : {}
                         }
                         transition={{
@@ -213,6 +230,29 @@ export const BankingScaleHero = () => {
                           top: point.direction === "down" ? "0px" : `${point.height - 8}px`,
                         }}
                       />
+                      {/* 방울 dot 루프 애니메이션 */}
+                      {isVisible && (
+                        <motion.div
+                          className="absolute -left-[1px] w-2 h-2 rounded-full"
+                          style={{
+                            top: point.direction === "down" ? "0px" : `${point.height - 8}px`,
+                            backgroundColor: "#167E6C",
+                          }}
+                          animate={{
+                            y: point.direction === "down"
+                              ? [0, -12, 0, -6, 0]
+                              : [0, 12, 0, 6, 0],
+                            scale: [1, 1.3, 1, 1.15, 1],
+                            opacity: [1, 0.7, 1, 0.85, 1],
+                          }}
+                          transition={{
+                            duration: 3 + (point.id % 5) * 0.4,
+                            delay: point.delay + 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        />
+                      )}
                     </motion.div>
                   ))}
                 </div>
