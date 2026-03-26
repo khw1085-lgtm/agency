@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 const COLORS_RGB = [
@@ -90,6 +90,11 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
   // Canvas 렌더링 루프
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -100,7 +105,6 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      // 마우스 초기값 = 화면 중앙
       if (smoothRef.current.x < 0) {
         smoothRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
         targetRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
@@ -117,7 +121,10 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
         return;
       }
 
-      // 마우스 스프링 (전체 파티클 군의 중심 추적)
+      // 스크롤에 따른 페이드아웃 계산 (70% 지점부터 서서히 사라짐)
+      const currentScroll = scrollYProgress.get();
+      const fadeOut = currentScroll < 0.7 ? 1 : Math.max(0, 1 - (currentScroll - 0.7) / 0.3); 
+
       const k = 0.06;
       smoothRef.current.x += (targetRef.current.x - smoothRef.current.x) * k;
       smoothRef.current.y += (targetRef.current.y - smoothRef.current.y) * k;
@@ -127,40 +134,38 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
       const cx = smoothRef.current.x;
       const cy = smoothRef.current.y;
 
-      for (const p of particles) {
-        // 궤도 회전
-        p.angle += p.angleSpeed;
+      // 페이드아웃이 거의 다 되면 그리지 않음
+      if (fadeOut > 0) {
+        for (const p of particles) {
+          p.angle += p.angleSpeed;
+          p.springX += (cx - p.springX) * p.springStiffness;
+          p.springY += (cy - p.springY) * p.springStiffness;
 
-        // 각 파티클도 독립적 스프링으로 cx,cy를 따라감
-        p.springX += (cx - p.springX) * p.springStiffness;
-        p.springY += (cy - p.springY) * p.springStiffness;
+          const x = p.springX + Math.cos(p.angle) * p.orbitRadius;
+          const y = p.springY + Math.sin(p.angle) * p.orbitRadius;
 
-        const x = p.springX + Math.cos(p.angle) * p.orbitRadius;
-        const y = p.springY + Math.sin(p.angle) * p.orbitRadius;
+          p.alpha += p.alphaSpeed;
+          if (p.alpha > 1 || p.alpha < 0.15) p.alphaSpeed *= -1;
 
-        // alpha 맥동
-        p.alpha += p.alphaSpeed;
-        if (p.alpha > 1 || p.alpha < 0.15) p.alphaSpeed *= -1;
+          const [r, g, b] = COLORS_RGB[p.colorIdx];
+          const w = p.size * 2.5;
+          const h = p.size;
 
-        const [r, g, b] = COLORS_RGB[p.colorIdx];
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(p.angle * 0.4);
+          ctx.globalAlpha = p.alpha * fadeOut;
 
-        // 알약형 그리기
-        const w = p.size * 2.5;
-        const h = p.size;
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(p.angle * 0.4);
-        ctx.globalAlpha = p.alpha;
+          const grad = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
+          grad.addColorStop(0, `rgb(${r},${g},${b})`);
+          grad.addColorStop(1, `rgb(${Math.min(r + 60, 255)},${Math.min(g + 40, 255)},${Math.min(b + 80, 255)})`);
 
-        const grad = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
-        grad.addColorStop(0, `rgb(${r},${g},${b})`);
-        grad.addColorStop(1, `rgb(${Math.min(r + 60, 255)},${Math.min(g + 40, 255)},${Math.min(b + 80, 255)})`);
-
-        ctx.beginPath();
-        ctx.roundRect(-w / 2, -h / 2, w, h, h / 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
+          ctx.beginPath();
+          ctx.roundRect(-w / 2, -h / 2, w, h, h / 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+          ctx.restore();
+        }
       }
 
       rafRef.current = requestAnimationFrame(draw);

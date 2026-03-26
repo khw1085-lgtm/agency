@@ -12,6 +12,7 @@ import Lottie from "lottie-react";
 import aboutAnimation from "@/lottie/cat_animation.json";
 import catPlayingAnimation from "@/lottie/cat_playing.json";
 import HeroTyping from "@/components/HeroTyping";
+import HeroExpandSection from "@/components/HeroExpandSection";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -129,6 +130,7 @@ export default function Home() {
         {isIframe ? null : (
           <>
           <HeroTyping theme={theme} />
+          <HeroExpandSection />
           
           <div
             id="about-section"
