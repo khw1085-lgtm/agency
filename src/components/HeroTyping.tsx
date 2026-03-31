@@ -17,13 +17,13 @@ interface Particle {
   y: number;
   size: number;
   colorIdx: number;
-  angle: number;       // 현재 회전 각도
-  distance: number;    // 마우스로부터의 거리
-  targetDist: number;  // 목표 궤도 거리
-  speed: number;       // 회전 속도
+  angle: number;       
+  distance: number;    
+  targetDist: number;  
+  speed: number;       
 }
 
-const PARTICLE_COUNT = 2000; // 도트 타입이므로 약간 줄임 (깔끔함 강조)
+const PARTICLE_COUNT = 2000;
 
 export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
   const fullText = "Experience liftoff with the next-generation IDE";
@@ -34,8 +34,12 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
   const sectionRef = useRef<HTMLElement>(null);
   const rafRef = useRef<number>(0);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
-  // 마우스 추종을 부드럽게 하기 위한 지연 좌표
+  
+  // 마우스의 이전 좌표와 현재 이동 속도(기울기) 추적
+  const prevMouse = useRef({ x: 0, y: 0 });
+  const mouseVelocity = useRef({ x: 0, y: 0 });
   const smoothMouse = useRef({ x: 0, y: 0 });
+
   const particlesRef = useRef<Particle[]>([]);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
@@ -47,12 +51,12 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
         arr[i] = {
             x: Math.random() * width,
             y: Math.random() * height,
-            size: 0.8 + Math.random() * 1.5, // 도트 크기 가변
+            size: 0.8 + Math.random() * 1.5,
             colorIdx: Math.floor(Math.random() * COLORS_RGB.length),
             angle: Math.random() * Math.PI * 2,
             distance: Math.random() * width,
-            targetDist: 100 + Math.random() * 400, // 넓은 궤적
-            speed: 0.002 + Math.random() * 0.005,  // 극도로 느린 회전속도
+            targetDist: 100 + Math.random() * 420, 
+            speed: 0.002 + Math.random() * 0.006,
         };
     }
     return arr;
@@ -102,6 +106,7 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
         smoothMouse.current = { x: canvas.width / 2, y: canvas.height / 2 };
+        prevMouse.current = { x: canvas.width / 2, y: canvas.height / 2 };
         const currentCount = canvas.width <= 400 ? PARTICLE_COUNT * 0.5 : PARTICLE_COUNT;
         particlesRef.current = createParticles(currentCount, canvas.width, canvas.height);
       }
@@ -124,38 +129,44 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
           const particles = particlesRef.current;
           const rect = canvas.getBoundingClientRect();
           
-          // 마우스 좌표 부드럽게 보정 (튀지 않게)
-          const targetX = mouseRef.current.active ? (mouseRef.current.x - rect.left) : (canvas.width / 2);
-          const targetY = mouseRef.current.active ? (mouseRef.current.y - rect.top) : (canvas.height / 2);
+          const currentX = mouseRef.current.active ? (mouseRef.current.x - rect.left) : (canvas.width / 2);
+          const currentY = mouseRef.current.active ? (mouseRef.current.y - rect.top) : (canvas.height / 2);
           
-          smoothMouse.current.x += (targetX - smoothMouse.current.x) * 0.03;
-          smoothMouse.current.y += (targetY - smoothMouse.current.y) * 0.03;
+          // 마우스 속도(관성) 계산
+          const dx = currentX - prevMouse.current.x;
+          const dy = currentY - prevMouse.current.y;
+          mouseVelocity.current.x += (dx - mouseVelocity.current.x) * 0.1;
+          mouseVelocity.current.y += (dy - mouseVelocity.current.y) * 0.1;
+          prevMouse.current = { x: currentX, y: currentY };
+
+          // 부드러운 위치 추적
+          smoothMouse.current.x += (currentX - smoothMouse.current.x) * 0.04;
+          smoothMouse.current.y += (currentY - smoothMouse.current.y) * 0.04;
 
           const groups: Particle[][] = Array.from({ length: COLORS_RGB.length }, () => []);
 
           for (let i = 0; i < particles.length; i++) {
             const p = particles[i];
             
-            // 궤도 계산 (차분한 360도 회전)
             p.angle += p.speed;
-            
-            // 거리를 목표 거리로 부드럽게 수렴
             p.distance += (p.targetDist - p.distance) * 0.02;
             
-            // 절대 좌표 업데이트 (마우스 중심 기반)
-            p.x = smoothMouse.current.x + Math.cos(p.angle) * p.distance;
-            p.y = smoothMouse.current.y + Math.sin(p.angle) * p.distance;
+            // "쏠리는(Lean)" 효과 적용: 마우스 속도에 비례하여 위치 오프셋 추가
+            const leanX = mouseVelocity.current.x * 2.5;
+            const leanY = mouseVelocity.current.y * 2.5;
+
+            p.x = smoothMouse.current.x + Math.cos(p.angle) * p.distance + leanX;
+            p.y = smoothMouse.current.y + Math.sin(p.angle) * p.distance + leanY;
             
             groups[p.colorIdx].push(p);
           }
 
-          // 도트 스타일 렌더링
           for(let i = 0; i < COLORS_RGB.length; i++) {
             const [r, g, b] = COLORS_RGB[i];
             const group = groups[i];
             if (group.length === 0) continue;
             
-            ctx.fillStyle = `rgba(${r},${g},${b}, ${0.6 * fadeOut * entryAlphaRef.current})`;
+            ctx.fillStyle = `rgba(${r},${g},${b}, ${0.5 * fadeOut * entryAlphaRef.current})`;
             
             for(let j = 0; j < group.length; j++) {
               const p = group[j];

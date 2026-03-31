@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Monitor, Smartphone, ArrowUpRight, X, Menu, ChevronLeft, ChevronRight, ExternalLink, RotateCcw, Maximize2 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useVelocity, useSpring, useTransform, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { Monitor, Smartphone, X, Menu } from "lucide-react";
+import { motion, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import Lenis from "lenis";
@@ -10,9 +10,9 @@ import BrillancePreview from "@/components/BrillancePreview";
 import Work02Preview from "@/components/Work02Preview";
 import Lottie from "lottie-react";
 import aboutAnimation from "@/lottie/cat_animation.json";
-import catPlayingAnimation from "@/lottie/cat_playing.json";
 import HeroTyping from "@/components/HeroTyping";
 import HeroExpandSection from "@/components/HeroExpandSection";
+import AIToolShowcase from "@/components/AIToolShowcase";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -53,8 +53,9 @@ const projects = [
 ];
 
 export default function Home() {
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
   const theme = "light";
+  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
 
   const [isIframe, setIsIframe] = useState(false);
   const [fullSiteId, setFullSiteId] = useState<string | null>(null);
@@ -87,7 +88,6 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  // 모달 오픈 시 Lenis 정지로 배경 스크롤 완전 차단
   useEffect(() => {
     if (selectedProject) {
       lenisRef.current?.stop();
@@ -95,13 +95,6 @@ export default function Home() {
       lenisRef.current?.start();
     }
   }, [selectedProject]);
-
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const toggleType = (type: string) => {
-    setSelectedTypes(prev =>
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
-  };
 
   if (fullSiteId) {
     return (
@@ -129,73 +122,75 @@ export default function Home() {
       >
         {isIframe ? null : (
           <>
-          <HeroTyping theme={theme} />
-          <HeroExpandSection />
-          
-          <div
-            id="about-section"
-            className="w-full min-h-screen px-5 md:px-8 max-w-[1500px] mx-auto py-24 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 relative"
-          >
-             <div className="flex-1 w-full flex justify-center items-center">
-               <div className="w-[300px] h-[300px]">
-                  <Lottie
-                    animationData={aboutAnimation}
-                    loop={true}
-                    autoPlay={true}
-                    style={{ width: '100%', height: '100%' }}
-                  />
+            <HeroTyping theme={theme} />
+            <HeroExpandSection />
+            
+            <AIToolShowcase theme={theme} />
+
+            <div
+              id="about-section"
+              className="w-full min-h-screen px-5 md:px-8 max-w-[1500px] mx-auto py-24 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 relative"
+            >
+               <div className="flex-1 w-full flex justify-center items-center">
+                 <div className="w-[300px] h-[300px]">
+                    <Lottie
+                      animationData={aboutAnimation}
+                      loop={true}
+                      autoPlay={true}
+                      style={{ width: '100%', height: '100%' }}
+                    />
+                 </div>
                </div>
-             </div>
-             <div className="flex-1 w-full text-center md:text-left flex flex-col justify-center">
-                <h1 className="text-4xl md:text-[50px] leading-none font-bold uppercase tracking-tighter mb-8 text-black">
-                   About us
-                </h1>
-                <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest mb-6 opacity-60 text-black uppercase">
-                   We are a forward-thinking creative studio specializing in digital innovation. Our focus is on crafting bold, timeless, and highly interactive experiences that defy expectations.
-                </p>
-                <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest opacity-60 text-black uppercase">
-                   Welcome to the future of digital identity.
-                </p>
-             </div>
-          </div>
-
-          <div id="work-section" className="flex-1 w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28">
-            <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-8 md:mb-16 text-black">
-              Work
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 items-start">
-              {projects.map((project, index) => (
-                <ThumbnailCard
-                  key={project.id}
-                  index={index}
-                  project={project}
-                  theme={theme}
-                  onClick={() => setSelectedProject(project)}
-                />
-              ))}
+               <div className="flex-1 w-full text-center md:text-left flex flex-col justify-center">
+                  <h1 className="text-4xl md:text-[50px] leading-none font-bold uppercase tracking-tighter mb-8 text-black">
+                     About us
+                  </h1>
+                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest mb-6 opacity-60 text-black uppercase">
+                     We are a forward-thinking creative studio specializing in digital innovation. Our focus is on crafting bold, timeless, and highly interactive experiences that defy expectations.
+                  </p>
+                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest opacity-60 text-black uppercase">
+                     Welcome to the future of digital identity.
+                  </p>
+               </div>
             </div>
-          </div>
 
-          <div id="contact-section" className="w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28 flex flex-col">
-             <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-10 md:mb-16 text-black">Contact</h2>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-                <div className="flex flex-col gap-10">
-                   {["성함", "전화번호", "이메일"].map((label) => (
-                     <div key={label} className="flex flex-col gap-3">
-                        <label className="text-[14px] font-bold uppercase tracking-widest text-black/40">{label} *</label>
-                        <input className="bg-transparent border border-dashed-custom px-5 py-3 text-sm text-black" placeholder={`${label}을 입력해주세요.`} />
+            <div id="work-section" className="flex-1 w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28">
+              <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-8 md:mb-16 text-black">
+                Work
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 items-start">
+                {projects.map((project, index) => (
+                  <ThumbnailCard
+                    key={project.id}
+                    index={index}
+                    project={project}
+                    theme={theme}
+                    onClick={() => setSelectedProject(project)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div id="contact-section" className="w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28 flex flex-col">
+               <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-10 md:mb-16 text-black">Contact</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
+                  <div className="flex flex-col gap-10">
+                     {["성함", "전화번호", "이메일"].map((label) => (
+                       <div key={label} className="flex flex-col gap-3">
+                          <label className="text-[14px] font-bold uppercase tracking-widest text-black/40">{label} *</label>
+                          <input className="bg-transparent border border-dashed-custom px-5 py-3 text-sm text-black" placeholder={`${label}을 입력해주세요.`} />
+                       </div>
+                     ))}
+                  </div>
+                  <div className="flex flex-col gap-10">
+                     <div className="flex flex-col gap-3">
+                        <label className="text-[14px] font-bold uppercase tracking-widest text-black/40">문의 내용 *</label>
+                        <textarea rows={5} className="bg-transparent border border-dashed-custom px-5 py-3 text-sm text-black resize-none" placeholder="내용을 입력해주세요." />
                      </div>
-                   ))}
-                </div>
-                <div className="flex flex-col gap-10">
-                   <div className="flex flex-col gap-3">
-                      <label className="text-[14px] font-bold uppercase tracking-widest text-black/40">문의 내용 *</label>
-                      <textarea rows={5} className="bg-transparent border border-dashed-custom px-5 py-3 text-sm text-black resize-none" placeholder="내용을 입력해주세요." />
-                   </div>
-                   <button className="w-full py-5 bg-black text-white font-bold uppercase tracking-widest hover:bg-[#ffde00] hover:text-black transition-all">Send Message</button>
-                </div>
-             </div>
-          </div>
+                     <button className="w-full py-5 bg-black text-white font-bold uppercase tracking-widest hover:bg-[#ffde00] hover:text-black transition-all">Send Message</button>
+                  </div>
+               </div>
+            </div>
           </>
         )}
       </motion.main>
@@ -208,23 +203,48 @@ export default function Home() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[10000] flex items-center justify-center p-2 md:p-10 pointer-events-none"
           >
-            <div onClick={() => setSelectedProject(null)} className="absolute inset-0 bg-white/60 cursor-pointer pointer-events-auto backdrop-blur-xl" />
+            <div onClick={() => { setSelectedProject(null); setViewMode("desktop"); }} className="absolute inset-0 bg-white/60 cursor-pointer pointer-events-auto backdrop-blur-xl" />
             <motion.div
               layoutId={`project-${selectedProject.id}`}
-              className="relative w-full max-w-[1400px] h-[95vh] md:h-[90vh] rounded-[16px] md:rounded-[32px] overflow-hidden pointer-events-auto flex flex-col bg-white border border-black/5 shadow-2xl z-20"
+              className={cn(
+                "relative h-[95vh] md:h-[90vh] rounded-[16px] md:rounded-[32px] overflow-hidden pointer-events-auto flex flex-col bg-white border border-black/5 shadow-2xl z-20 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+                viewMode === "mobile" ? "w-[400px]" : "w-full max-w-[1400px]"
+              )}
             >
               <div className="h-12 md:h-16 flex items-center justify-between px-4 md:px-8 border-b border-black/5 bg-white/80 backdrop-blur-md shrink-0">
-                 <div className="flex gap-1.5">
+                 <div className="flex gap-1.5 w-20">
                     <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                     <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
                     <div className="w-3 h-3 rounded-full bg-[#28c840]" />
                  </div>
-                 <h3 className="hidden md:block text-[11px] font-bold uppercase tracking-[0.2em] opacity-30">{selectedProject.title} / {selectedProject.category}</h3>
-                 <button onClick={() => setSelectedProject(null)} className="p-2 hover:bg-black/5 rounded-full transition-all">
-                    <X className="w-5 h-5" />
-                 </button>
+                 
+                 <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full">
+                    <button 
+                      onClick={() => setViewMode("desktop")}
+                      className={cn(
+                        "p-1.5 rounded-full transition-all",
+                        viewMode === "desktop" ? "bg-white shadow-sm text-black" : "text-black/30 hover:text-black/60"
+                      )}
+                    >
+                      <Monitor className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => setViewMode("mobile")}
+                      className={cn(
+                        "p-1.5 rounded-full transition-all",
+                        viewMode === "mobile" ? "bg-white shadow-sm text-black" : "text-black/30 hover:text-black/60"
+                      )}
+                    >
+                      <Smartphone className="w-4 h-4" />
+                    </button>
+                 </div>
+
+                 <div className="flex items-center gap-4 w-20 justify-end">
+                    <button onClick={() => { setSelectedProject(null); setViewMode("desktop"); }} className="p-2 hover:bg-black/5 rounded-full transition-all">
+                       <X className="w-5 h-5" />
+                    </button>
+                 </div>
               </div>
-              {/* 콘텐츠 스크롤 영역 - Lenis 제외 */}
               <div
                 className="flex-1 overflow-y-auto custom-scrollbar bg-white overscroll-contain"
                 data-lenis-prevent
@@ -243,7 +263,7 @@ export default function Home() {
   );
 }
 
-function ThumbnailCard({ project, theme, onClick }: { project: any, theme: string, onClick: () => void, index: number }) {
+function ThumbnailCard({ project, theme, onClick, index }: { project: any, theme: string, onClick: () => void, index: number }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
