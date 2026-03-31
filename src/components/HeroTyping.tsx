@@ -4,47 +4,26 @@ import { motion, useScroll } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 const COLORS_RGB = [
-  [99, 102, 241],   // indigo-500
-  [139, 92, 246],   // violet-500
-  [59, 130, 246],   // blue-500
-  [167, 139, 250],  // violet-400
-  [96, 165, 250],   // blue-400
-  [129, 140, 248],  // indigo-400
-  [79, 70, 229],    // indigo-600
-  [124, 58, 237],   // violet-600
-  [196, 181, 253],  // violet-300
-  [37, 99, 235],    // blue-600
+  [96, 165, 250],  // blue-400
+  [129, 140, 248], // indigo-400
+  [191, 219, 254], // blue-200
+  [226, 232, 240], // slate-200
+  [255, 255, 255], // white
+  [165, 180, 252], // indigo-300
 ];
 
 interface Particle {
-  orbitRadius: number;
-  angle: number;
-  angleSpeed: number;
+  x: number;
+  y: number;
   size: number;
   colorIdx: number;
-  alpha: number;
-  alphaSpeed: number;
-  springX: number;
-  springY: number;
-  springStiffness: number;
+  angle: number;       // 현재 회전 각도
+  distance: number;    // 마우스로부터의 거리
+  targetDist: number;  // 목표 궤도 거리
+  speed: number;       // 회전 속도
 }
 
-function createParticles(count: number): Particle[] {
-  return Array.from({ length: count }, (_, i) => ({
-    orbitRadius: 20 + Math.random() * 380,
-    angle: (i / count) * Math.PI * 2 + Math.random() * 0.5,
-    angleSpeed: (0.002 + Math.random() * 0.006) * (Math.random() > 0.5 ? 1 : -1),
-    size: 1 + Math.random() * 3,
-    colorIdx: Math.floor(Math.random() * COLORS_RGB.length),
-    alpha: 0.3 + Math.random() * 0.7,
-    alphaSpeed: 0.005 + Math.random() * 0.015,
-    springX: 0,
-    springY: 0,
-    springStiffness: 0.02 + Math.random() * 0.05,
-  }));
-}
-
-const PARTICLE_COUNT = 1200;
+const PARTICLE_COUNT = 2000; // 도트 타입이므로 약간 줄임 (깔끔함 강조)
 
 export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
   const fullText = "Experience liftoff with the next-generation IDE";
@@ -54,48 +33,63 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const rafRef = useRef<number>(0);
-  const mouseRef = useRef({ x: -9999, y: -9999 });
-  const targetRef = useRef({ x: -9999, y: -9999 }); // 스프링 목표
-  const smoothRef = useRef({ x: -9999, y: -9999 }); // 현재 스무스 위치
-  const particlesRef = useRef<Particle[]>(createParticles(PARTICLE_COUNT));
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
+  // 마우스 추종을 부드럽게 하기 위한 지연 좌표
+  const smoothMouse = useRef({ x: 0, y: 0 });
+  const particlesRef = useRef<Particle[]>([]);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
+  const entryAlphaRef = useRef(0);
 
-  // 타이핑
+  function createParticles(count: number, width: number, height: number): Particle[] {
+    const arr = new Array(count);
+    for (let i = 0; i < count; i++) {
+        arr[i] = {
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: 0.8 + Math.random() * 1.5, // 도트 크기 가변
+            colorIdx: Math.floor(Math.random() * COLORS_RGB.length),
+            angle: Math.random() * Math.PI * 2,
+            distance: Math.random() * width,
+            targetDist: 100 + Math.random() * 400, // 넓은 궤적
+            speed: 0.002 + Math.random() * 0.005,  // 극도로 느린 회전속도
+        };
+    }
+    return arr;
+  }
+
   useEffect(() => {
     if (phase !== "typing") return;
     if (displayText.length < fullText.length) {
-      const t = setTimeout(() => setDisplayText(fullText.slice(0, displayText.length + 1)), 60);
+      const t = setTimeout(() => {
+        setDisplayText(fullText.slice(0, displayText.length + 1));
+      }, 50);
       return () => clearTimeout(t);
     } else {
       setPhase("done");
     }
   }, [displayText, phase]);
 
-  // 마우스 추적
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const inside =
-          e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom;
-        if (inside) {
-          targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-        }
-      }
+      mouseRef.current = { x: e.clientX, y: e.clientY, active: true };
+    };
+    const onLeave = () => {
+      mouseRef.current.active = false;
     };
     window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    window.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseleave", onLeave);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: sectionRef as any,
     offset: ["start start", "end start"],
   });
 
-  // Canvas 렌더링 루프
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -103,68 +97,80 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      if (smoothRef.current.x < 0) {
-        smoothRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
-        targetRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.offsetWidth;
+        canvas.height = parent.offsetHeight;
+        smoothMouse.current = { x: canvas.width / 2, y: canvas.height / 2 };
+        const currentCount = canvas.width <= 400 ? PARTICLE_COUNT * 0.5 : PARTICLE_COUNT;
+        particlesRef.current = createParticles(currentCount, canvas.width, canvas.height);
       }
     };
     resize();
     window.addEventListener("resize", resize);
 
-    const particles = particlesRef.current;
-
     const draw = () => {
-      if (phaseRef.current !== "done") {
-        rafRef.current = requestAnimationFrame(draw);
-        return;
-      }
-
-      // 스크롤에 따른 페이드아웃 계산 (70% 지점부터 서서히 사라짐)
-      const currentScroll = scrollYProgress.get();
-      const fadeOut = currentScroll < 0.7 ? 1 : Math.max(0, 1 - (currentScroll - 0.7) / 0.3); 
-
-      const k = 0.06;
-      smoothRef.current.x += (targetRef.current.x - smoothRef.current.x) * k;
-      smoothRef.current.y += (targetRef.current.y - smoothRef.current.y) * k;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const cx = smoothRef.current.x;
-      const cy = smoothRef.current.y;
+      if (phaseRef.current === "done") {
+        if (entryAlphaRef.current < 1) {
+          entryAlphaRef.current += 0.01;
+        }
 
-      // 페이드아웃이 거의 다 되면 그리지 않음
-      if (fadeOut > 0) {
-        for (const p of particles) {
-          p.angle += p.angleSpeed;
-          p.springX += (cx - p.springX) * p.springStiffness;
-          p.springY += (cy - p.springY) * p.springStiffness;
+        const currentScroll = scrollYProgress.get();
+        const fadeOut = currentScroll < 0.7 ? 1 : Math.max(0, 1 - (currentScroll - 0.7) / 0.3); 
 
-          const x = p.springX + Math.cos(p.angle) * p.orbitRadius;
-          const y = p.springY + Math.sin(p.angle) * p.orbitRadius;
+        if (fadeOut > 0) {
+          const particles = particlesRef.current;
+          const rect = canvas.getBoundingClientRect();
+          
+          // 마우스 좌표 부드럽게 보정 (튀지 않게)
+          const targetX = mouseRef.current.active ? (mouseRef.current.x - rect.left) : (canvas.width / 2);
+          const targetY = mouseRef.current.active ? (mouseRef.current.y - rect.top) : (canvas.height / 2);
+          
+          smoothMouse.current.x += (targetX - smoothMouse.current.x) * 0.03;
+          smoothMouse.current.y += (targetY - smoothMouse.current.y) * 0.03;
 
-          p.alpha += p.alphaSpeed;
-          if (p.alpha > 1 || p.alpha < 0.15) p.alphaSpeed *= -1;
+          const groups: Particle[][] = Array.from({ length: COLORS_RGB.length }, () => []);
 
-          const [r, g, b] = COLORS_RGB[p.colorIdx];
-          const w = p.size * 2.5;
-          const h = p.size;
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            
+            // 궤도 계산 (차분한 360도 회전)
+            p.angle += p.speed;
+            
+            // 거리를 목표 거리로 부드럽게 수렴
+            p.distance += (p.targetDist - p.distance) * 0.02;
+            
+            // 절대 좌표 업데이트 (마우스 중심 기반)
+            p.x = smoothMouse.current.x + Math.cos(p.angle) * p.distance;
+            p.y = smoothMouse.current.y + Math.sin(p.angle) * p.distance;
+            
+            groups[p.colorIdx].push(p);
+          }
 
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate(p.angle * 0.4);
-          ctx.globalAlpha = p.alpha * fadeOut;
+          // 도트 스타일 렌더링
+          for(let i = 0; i < COLORS_RGB.length; i++) {
+            const [r, g, b] = COLORS_RGB[i];
+            const group = groups[i];
+            if (group.length === 0) continue;
+            
+            ctx.fillStyle = `rgba(${r},${g},${b}, ${0.6 * fadeOut * entryAlphaRef.current})`;
+            
+            for(let j = 0; j < group.length; j++) {
+              const p = group[j];
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
 
-          const grad = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
-          grad.addColorStop(0, `rgb(${r},${g},${b})`);
-          grad.addColorStop(1, `rgb(${Math.min(r + 60, 255)},${Math.min(g + 40, 255)},${Math.min(b + 80, 255)})`);
-
-          ctx.beginPath();
-          ctx.roundRect(-w / 2, -h / 2, w, h, h / 2);
+          const gradientHeight = 250;
+          const grad = ctx.createLinearGradient(0, canvas.height - gradientHeight, 0, canvas.height);
+          grad.addColorStop(0, "rgba(255, 255, 255, 0)");
+          grad.addColorStop(1, "rgba(255, 255, 255, 1)");
           ctx.fillStyle = grad;
-          ctx.fill();
-          ctx.restore();
+          ctx.fillRect(0, canvas.height - gradientHeight, canvas.width, gradientHeight);
         }
       }
 
@@ -184,13 +190,11 @@ export default function HeroTyping({ theme }: { theme: "light" | "dark" }) {
       ref={sectionRef}
       className="relative w-full h-screen flex items-center justify-center bg-white overflow-hidden px-5 md:px-12"
     >
-      {/* Canvas 파티클 레이어 */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-[5]"
       />
 
-      {/* 텍스트 */}
       <div className="max-w-[1000px] w-full text-center relative z-10">
         <h1 className="text-[32px] sm:text-[48px] md:text-[72px] lg:text-[88px] leading-[1.05] font-semibold tracking-[-0.03em] text-black">
           <span className="relative">
