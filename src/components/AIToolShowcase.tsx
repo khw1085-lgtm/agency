@@ -16,7 +16,26 @@ export default function AIToolShowcase({ theme }: { theme: "light" | "dark" }) {
 
   return (
     <section id="ai-tool-section" className="w-full py-32 px-5 md:px-20 max-w-[1600px] mx-auto overflow-hidden relative">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-32 items-center">
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={cn(
+          "text-[24px] md:text-[30px] font-semibold mb-8 md:mb-10 tracking-tighter uppercase",
+          theme === "dark" ? "text-white" : "text-black"
+        )}
+      >
+        Skill
+      </motion.h2>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8, y: 40 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-32 items-center"
+      >
         {/* 좌측: 텍스트 영역 */}
         <div className="flex flex-col gap-6 max-w-[500px]">
           <motion.h2 
@@ -76,7 +95,7 @@ export default function AIToolShowcase({ theme }: { theme: "light" | "dark" }) {
             <div className="absolute inset-0 bg-black/[0.02]" />
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Monitor, Smartphone, X, Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Monitor, Smartphone, X, Menu, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -28,32 +29,32 @@ const colors = [
 const projects = [
   {
     id: "01",
-    title: "BRILLANCE",
-    category: "SaaS Billing Site",
-    description: "EFFORTLESS CUSTOM CONTRACT BILLING FOR MODERN ENTERPRISE. A SEAMLESS AUTOMATION PLATFORM BUILT BY BRILLANCE.",
-    color: "#F7F5F3",
-    image: "/projects/work_01.png",
+    title: "PROJECT 01",
+    category: "Design System",
+    description: "CREATIVE DIRECTION AND DESIGN SYSTEM FOR AGENTIC AI.",
+    color: "#000000",
+    image: "/projects/logo_01.svg",
   },
   {
     id: "02",
-    title: "FINTECH PLATFORM",
-    category: "Banking Solutions",
-    description: "NEXT-GENERATION DIGITAL BANKING INTERFACE AND FINANCIAL TOOLS.",
-    color: "#0F172A",
-    image: "/projects/work_02.png",
+    title: "ZIGBANG",
+    category: "Fintech",
+    description: "NEXT-GEN FINTECH INTERFACE AND DATA VISUALIZATION.",
+    color: "#FF681B",
+    image: "/projects/logo_02.svg",
   },
-  ...Array.from({ length: 10 }, (_, i) => ({
-    id: String(i + 3).padStart(2, '0'),
-    title: `PROJECT ${i + 3}`,
-    category: (i + 1) % 2 === 0 ? "Turnkey site" : "Corporate site",
-    description: `THIS IS A CREATIVE PROJECT SHOWCASE NUMBER ${i + 3}...`,
-    color: colors[(i + 1) % colors.length],
+  {
+    id: "03",
+    title: "HGNN",
+    category: "Analytics",
+    description: "ADVANCED ANALYTICS PLATFORM DESIGN.",
+    color: "#FFDE00",
     image: null,
-  })),
+  }
 ];
 
 export default function Home() {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const router = useRouter();
   const theme = "light";
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
 
@@ -88,14 +89,6 @@ export default function Home() {
     return () => lenis.destroy();
   }, []);
 
-  useEffect(() => {
-    if (selectedProject) {
-      lenisRef.current?.stop();
-    } else {
-      lenisRef.current?.start();
-    }
-  }, [selectedProject]);
-
   if (fullSiteId) {
     return (
       <div className="min-h-screen bg-white text-black transition-colors duration-[800ms]">
@@ -123,15 +116,12 @@ export default function Home() {
         {isIframe ? null : (
           <>
             <HeroTyping theme={theme} />
-            <HeroExpandSection />
             
-            <AIToolShowcase theme={theme} />
-
             <div
-              id="about-section"
-              className="w-full min-h-screen px-5 md:px-8 max-w-[1500px] mx-auto py-24 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 relative"
+              id="about-me-section"
+              className="w-full h-screen px-5 md:px-8 max-w-[1500px] mx-auto flex flex-col items-center justify-center gap-[20px] relative"
             >
-               <div className="flex-1 w-full flex justify-center items-center">
+               <div className="w-full flex justify-center items-center">
                  <div className="w-[300px] h-[300px]">
                     <Lottie
                       animationData={aboutAnimation}
@@ -141,38 +131,68 @@ export default function Home() {
                     />
                  </div>
                </div>
-               <div className="flex-1 w-full text-center md:text-left flex flex-col justify-center">
-                  <h1 className="text-4xl md:text-[50px] leading-none font-bold uppercase tracking-tighter mb-8 text-black">
-                     About us
-                  </h1>
-                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest mb-6 opacity-60 text-black uppercase">
+               <div className="w-full text-center flex flex-col items-center max-w-[800px]">
+                  <motion.h1 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-[24px] md:text-[30px] font-semibold uppercase tracking-tighter mb-8 md:mb-10 text-black leading-none"
+                  >
+                     About me
+                  </motion.h1>
+                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest mb-6 opacity-60 text-black uppercase text-center">
                      We are a forward-thinking creative studio specializing in digital innovation. Our focus is on crafting bold, timeless, and highly interactive experiences that defy expectations.
                   </p>
-                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest opacity-60 text-black uppercase">
+                  <p className="text-[13px] md:text-sm leading-[1.8] tracking-widest opacity-60 text-black uppercase text-center">
                      Welcome to the future of digital identity.
                   </p>
                </div>
             </div>
 
+            <HeroExpandSection />
+            
+            <AIToolShowcase theme={theme} />
+
             <div id="work-section" className="flex-1 w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28">
-              <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-8 md:mb-16 text-black">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[24px] md:text-[30px] font-semibold uppercase tracking-tighter mb-8 md:mb-10 text-black"
+              >
                 Work
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 items-start">
+              </motion.h2>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, y: 40 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 items-start"
+              >
                 {projects.map((project, index) => (
                   <ThumbnailCard
                     key={project.id}
                     index={index}
                     project={project}
                     theme={theme}
-                    onClick={() => setSelectedProject(project)}
+                    onClick={() => router.push(`/project/${project.id}`)}
                   />
                 ))}
-              </div>
+              </motion.div>
             </div>
 
             <div id="contact-section" className="w-full px-5 md:px-8 max-w-[1500px] mx-auto py-16 md:py-28 flex flex-col">
-               <h2 className="text-2xl md:text-[32px] font-bold uppercase tracking-tighter mb-10 md:mb-16 text-black">Contact</h2>
+               <motion.h2 
+                 initial={{ opacity: 0, y: 20 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                 className="text-[24px] md:text-[30px] font-semibold uppercase tracking-tighter mb-8 md:mb-10 text-black"
+               >
+                 Contact
+               </motion.h2>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
                   <div className="flex flex-col gap-10">
                      {["성함", "전화번호", "이메일"].map((label) => (
@@ -195,70 +215,6 @@ export default function Home() {
         )}
       </motion.main>
 
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[10000] flex items-center justify-center p-2 md:p-10 pointer-events-none"
-          >
-            <div onClick={() => { setSelectedProject(null); setViewMode("desktop"); }} className="absolute inset-0 bg-white/60 cursor-pointer pointer-events-auto backdrop-blur-xl" />
-            <motion.div
-              layoutId={`project-${selectedProject.id}`}
-              className={cn(
-                "relative h-[95vh] md:h-[90vh] rounded-[16px] md:rounded-[32px] overflow-hidden pointer-events-auto flex flex-col bg-white border border-black/5 shadow-2xl z-20 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
-                viewMode === "mobile" ? "w-[400px]" : "w-full max-w-[1400px]"
-              )}
-            >
-              <div className="h-12 md:h-16 flex items-center justify-between px-4 md:px-8 border-b border-black/5 bg-white/80 backdrop-blur-md shrink-0">
-                 <div className="flex gap-1.5 w-20">
-                    <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-                    <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-                    <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-                 </div>
-                 
-                 <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full">
-                    <button 
-                      onClick={() => setViewMode("desktop")}
-                      className={cn(
-                        "p-1.5 rounded-full transition-all",
-                        viewMode === "desktop" ? "bg-white shadow-sm text-black" : "text-black/30 hover:text-black/60"
-                      )}
-                    >
-                      <Monitor className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => setViewMode("mobile")}
-                      className={cn(
-                        "p-1.5 rounded-full transition-all",
-                        viewMode === "mobile" ? "bg-white shadow-sm text-black" : "text-black/30 hover:text-black/60"
-                      )}
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </button>
-                 </div>
-
-                 <div className="flex items-center gap-4 w-20 justify-end">
-                    <button onClick={() => { setSelectedProject(null); setViewMode("desktop"); }} className="p-2 hover:bg-black/5 rounded-full transition-all">
-                       <X className="w-5 h-5" />
-                    </button>
-                 </div>
-              </div>
-              <div
-                className="flex-1 overflow-y-auto custom-scrollbar bg-white overscroll-contain"
-                data-lenis-prevent
-              >
-                <div className="w-full flex flex-col h-fit">
-                  {selectedProject.id === "01" ? <BrillancePreview theme={theme} /> : <Work02Preview />}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <GlobalCustomCursor theme={theme} />
     </div>
   );
 }
@@ -266,48 +222,47 @@ export default function Home() {
 function ThumbnailCard({ project, theme, onClick, index }: { project: any, theme: string, onClick: () => void, index: number }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.02 }}
       className="flex flex-col w-full cursor-pointer group"
       onClick={onClick}
     >
-      <div className="flex flex-col text-xs font-semibold uppercase tracking-tight mb-2">
-        <span className="opacity-40 mb-1">{project.id} / 12</span>
-        <div className="flex justify-between items-end">
-          <span className="text-[13px] font-bold">{project.title}</span>
-          <span className="opacity-40 text-[10px]">{project.category}</span>
-        </div>
-      </div>
-      <div className="w-full aspect-[400/300] bg-[#f8f8f8] border border-black/5 rounded-2xl overflow-hidden relative">
-        {project.image ? (
-          <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-        ) : (
-          <div className="w-full h-full" style={{ backgroundColor: project.color }} />
+      <div className={cn(
+        "w-full aspect-[4/5] bg-[#f8f8f8] border border-black/5 rounded-none overflow-hidden relative shadow-sm hover:shadow-xl transition-all duration-500",
+        (index === 0 || index === 1) && "group-hover:border-black"
+      )}>
+        <div 
+          className={cn(
+            "absolute inset-0 transition-colors duration-500",
+            (index === 0 || index === 1) ? "group-hover:!bg-white" : ""
+          )} 
+          style={{ backgroundColor: project.color }} 
+        />
+        {project.image && (
+          <div className="absolute inset-0 flex items-center justify-center p-10 md:p-16">
+            <motion.img 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              src={project.image} 
+              alt={project.title} 
+              className={cn(
+                "w-full h-auto object-contain brightness-100 transition-all duration-500",
+                index === 1 ? "scale-[0.67]" : "scale-100",
+                (index === 0 || index === 1) && "group-hover:brightness-0"
+              )} 
+            />
+          </div>
+        )}
+        {index === 2 && !project.image && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-black font-bold text-2xl uppercase tracking-tighter">HGNN</span>
+          </div>
         )}
       </div>
     </motion.div>
   );
 }
 
-function GlobalCustomCursor({ theme }: { theme: "light" | "dark" }) {
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-  const springX = useSpring(mouseX, { stiffness: 800, damping: 30, mass: 0.5 });
-  const springY = useSpring(mouseY, { stiffness: 800, damping: 30, mass: 0.5 });
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-  return (
-    <motion.div
-      style={{ x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
-      className="fixed top-0 left-0 w-[70px] h-[70px] rounded-full pointer-events-none z-[21000] bg-black"
-    />
-  );
-}
 
 function Header({ theme }: { theme: "light" | "dark" }) {
   return (
@@ -317,7 +272,7 @@ function Header({ theme }: { theme: "light" | "dark" }) {
           <span className="font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-[11px] md:text-sm">Antigravity</span>
        </div>
        <div className="hidden md:flex gap-12 text-[10px] font-bold uppercase tracking-widest opacity-60">
-          <a href="#about-section" className="hover:opacity-100 transition-opacity">Story</a>
+          <a href="#about-me-section" className="hover:opacity-100 transition-opacity">Story</a>
           <a href="#work-section" className="hover:opacity-100 transition-opacity">Work</a>
           <a href="#contact-section" className="hover:opacity-100 transition-opacity">Enquiry</a>
        </div>
