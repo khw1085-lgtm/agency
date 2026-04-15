@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import CustomCursor from "@/components/CustomCursor";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased text-[#1c1c1c] bg-[#f7f6f2]`}>
+        <SmoothScrollProvider />
         <CustomCursor />
         {children}
       </body>
