@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Section002 from "@/components/Section002";
+import Section003 from "@/components/Section003";
+import { useScrollLag } from "@/lib/useScrollLag";
 
 /* ─────────────────────────── DATA ─────────────────────────── */
 
@@ -145,6 +147,7 @@ function SiteNav() {
 }
 
 function Header() {
+  const lagY = useScrollLag();
   return (
     <section
       data-nav-theme="light"
@@ -159,14 +162,19 @@ function Header() {
         className="pointer-events-none absolute left-1/2 top-4 z-20 h-3 w-3 -translate-x-1/2 rounded-full bg-neutral-300"
       />
 
-      {/* ─── Hero Typography (롤링 타이틀) ─── */}
-      {/* nav 공간 확보를 위한 상단 패딩(py 대응) */}
-      <div className="relative flex flex-1 items-center px-8 pt-24 md:px-12 md:pt-28">
+      {/* ─── Hero Typography (롤링 타이틀) + scroll lag ─── */}
+      <motion.div
+        style={{ y: lagY }}
+        className="relative flex flex-1 items-center px-8 pt-24 md:px-12 md:pt-28"
+      >
         <RollingHeroTitle />
-      </div>
+      </motion.div>
 
-      {/* ─── Bottom Row: tagline + WORK ARCHIVES ─── */}
-      <div className="relative z-10 flex w-full items-end justify-between gap-6 px-8 pb-8 md:px-12 md:pb-10">
+      {/* ─── Bottom Row: tagline + WORK ARCHIVES + scroll lag ─── */}
+      <motion.div
+        style={{ y: lagY }}
+        className="relative z-10 flex w-full items-end justify-between gap-6 px-8 pb-8 md:px-12 md:pb-10"
+      >
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -187,7 +195,7 @@ function Header() {
           WORK ARCHIVES
           <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </motion.button>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -200,6 +208,7 @@ export default function AgencyInteractive() {
       <SiteNav />
       <Header />
       <Section002 />
+      <Section003 />
     </main>
   );
 }

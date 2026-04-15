@@ -34,6 +34,7 @@
 | `MockBrowser.tsx` | Browser chrome frame used by preview wrappers. |
 | `CustomCursor.tsx` | Custom cursor layer, mounted globally in `layout.tsx`. |
 | `SmoothScrollProvider.tsx` | **Global Lenis smooth-scroll init** (lerp 0.08). Mounted in `layout.tsx` so every route gets buttery wheel scroll — required for `Section002`'s spring to feel cursor-attached. |
+| `Section003.tsx` | About section (100vh). Blinks white↔black once when viewport is fully filled, then settles back to white. Rendered on `/figma-preview`. |
 
 ### Sub-projects (preserved but not directly routed)
 
@@ -88,4 +89,5 @@ SPRING = { stiffness: 160, damping: 26, mass: 0.55 }
 - **Styling:** Tailwind CSS
 - **Animation:** Framer Motion
 - **Smooth scroll:** Lenis (global — initialized in `SmoothScrollProvider` mounted in `layout.tsx`)
+- **Scroll lag hook:** `src/lib/useScrollLag.ts` — `useScrollLag(amplitude = 0.35)` returns a MotionValue of `(scrollY − springSmoothed(scrollY)) * amplitude`. Apply as `style={{ y: lag }}` on any section's content wrapper to get a subtle "content lags slightly behind scroll" feel. Zero at rest, small offset during active scroll. Currently applied in Hero, Section002 track/label, Section003.
 - **Design tokens:** see `DESIGN.md`

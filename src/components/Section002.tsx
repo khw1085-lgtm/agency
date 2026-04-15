@@ -8,6 +8,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { useScrollLag } from "@/lib/useScrollLag";
 
 /**
  * Section 002 — Swipe carousel (mouse only)
@@ -88,6 +89,9 @@ export default function Section002() {
   const y4 = useTransform(scrollYProgress, [0, 1], [PARALLAX_AMPS[4], -PARALLAX_AMPS[4]]);
   const parallaxYs = [y0, y1, y2, y3, y4];
 
+  // 전역 스크롤 lag — 모든 섹션에 공통 적용되는 시간차
+  const lagY = useScrollLag();
+
   // 인트로 종료 타이머
   useEffect(() => {
     if (!isCentered || introDone) return;
@@ -129,8 +133,11 @@ export default function Section002() {
       data-nav-theme="light"
       className="relative h-screen w-full overflow-hidden bg-white"
     >
-      {/* 섹션 라벨 + 카운터 */}
-      <div className="pointer-events-none absolute left-8 top-8 z-20 flex items-baseline gap-4 text-black/60 md:left-12 md:top-10">
+      {/* 섹션 라벨 + 카운터 (scroll lag) */}
+      <motion.div
+        style={{ y: lagY }}
+        className="pointer-events-none absolute left-8 top-8 z-20 flex items-baseline gap-4 text-black/60 md:left-12 md:top-10"
+      >
         <span className="text-[11px] font-bold uppercase tracking-[0.4em]">002</span>
         <motion.span
           key={index}
@@ -141,9 +148,9 @@ export default function Section002() {
         >
           {String(index + 1).padStart(2, "0")} / {String(CARD_COUNT).padStart(2, "0")}
         </motion.span>
-      </div>
+      </motion.div>
 
-      {/* 트랙 — 고정 위치(resting). 각 카드가 개별 motion */}
+      {/* 트랙 — 고정 위치(resting). 각 카드가 개별 motion. y 에 scroll lag 걸림 */}
       <motion.div
         className={
           "absolute inset-0 flex items-center " +
@@ -155,7 +162,7 @@ export default function Section002() {
         onDragEnd={onDragEnd}
         animate={{ x: trackX }}
         transition={SPRING}
-        style={{ gap: `${CARD_GAP}px`, willChange: "transform" }}
+        style={{ gap: `${CARD_GAP}px`, willChange: "transform", y: lagY }}
       >
         {Array.from({ length: CARD_COUNT }).map((_, i) => {
           const isActive = introDone && i === index;

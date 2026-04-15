@@ -12,11 +12,12 @@
 배경: `bg-white`
 렌더 순서:
 
-| # | Title Code       | 컴포넌트      | 파일/위치                                | 배경         | Figma node  | 요약 |
-|---|------------------|---------------|------------------------------------------|--------------|-------------|------|
-| — | `[NAV]`          | `SiteNav`     | `figma-preview/page.tsx` (같은 파일)     | 투명         | —           | 전역 스티키 네비. 배경 없음, 스크롤 중 섹션 테마 따라 폰트색 전환 |
-| 1 | `[S1-HERO]`      | `Header`      | `figma-preview/page.tsx` (같은 파일)     | `bg-white`   | `8:2` (001) | 히어로 타이포 (롤링 문구) + 태그라인 + CTA |
-| 2 | `[S2-SWIPE]`     | `Section002`  | `src/components/Section002.tsx`          | `bg-white`   | `8:1583`    | 스와이프 캐러셀 (마우스 드래그) + 센터 진입 시 회전 |
+| # | Title Code       | 컴포넌트      | 파일/위치                                | 배경                     | Figma node  | 요약 |
+|---|------------------|---------------|------------------------------------------|--------------------------|-------------|------|
+| — | `[NAV]`          | `SiteNav`     | `figma-preview/page.tsx` (같은 파일)     | 투명                     | —           | 전역 스티키 네비. 배경 없음, 스크롤 중 섹션 테마 따라 폰트색 전환 |
+| 1 | `[S1-HERO]`      | `Header`      | `figma-preview/page.tsx` (같은 파일)     | `bg-white`               | `8:2` (001) | 히어로 타이포 (롤링 문구) + 태그라인 + CTA |
+| 2 | `[S2-SWIPE]`     | `Section002`  | `src/components/Section002.tsx`          | `bg-white`               | `8:1583`    | 스와이프 캐러셀 + 필름 스트립 stagger |
+| 3 | `[S3-ABOUT]`     | `Section003`  | `src/components/Section003.tsx`          | `white → black` (스크롤) | —           | About. 스크롤 진행에 따라 배경/텍스트 반전 |
 
 > 이전(제거됨): Marquee · Services · Stats · Process · Works · Journal · CTA · Footer
 
@@ -113,6 +114,59 @@ SPRING = { stiffness: 160, damping: 26, mass: 0.55 }
 - `[S2-SWIPE] 패럴럭스 더 강하게` → `PARALLAX_AMPS` 값 증가
 - `[S2-SWIPE] 카드 색상 변경` → `CARD_COLORS` 배열 수정
 - `[S2-SWIPE] 더 민감하게 드래그` → `DRAG_THRESHOLD` 감소 (예: 40)
+
+---
+
+### `[S3-ABOUT]` — Section003 (src/components/Section003.tsx)
+
+**About 섹션, 뷰포트 꽉 채우는 순간 블링크 반전(1회).** 100vh. 평상시 흰 배경 + 검정 텍스트. 섹션이 뷰포트 top 에 맞물리는 순간 딱 한 번 검정↔흰 깜빡임 후 원상 복귀.
+
+#### 인터랙션 스펙
+- `useScroll({ target, offset: ["start end", "start start"] })` 로 scrollYProgress 0→1 매핑
+- `useMotionValueEvent` 로 progress ≥ `BLINK_TRIGGER_PROGRESS` (0.95) 첫 도달 시 블링크 시작
+- 블링크 keyframe (0.8초):
+  `0 → 0.1 → 0.25 → 0.4 → 0.55 → 0.7 → 1`
+  `bg: 흰→검→흰→검→흰→검→흰`, `color: 검→흰→검→흰→검→흰→검`
+- 블링크 종료 후 영구 흰 배경 유지
+- `data-nav-theme` 도 동일 스케줄로 `light↔dark` 토글 → 상단 `[NAV]` 폰트색도 함께 깜빡임
+- `useScrollLag` 로 콘텐츠에 전역 스크롤 시간차 적용
+
+#### 구조
+- `[S3-ABOUT.KICKER]` — 상단 좌측 `● About` (점 색상도 반전 대상)
+- `[S3-ABOUT.TITLE]` — 메인 헤드라인
+  - `WE ARE A SEOUL BASED (GLOBAL) AGENCY FOCUSING ON → MARKETING, UI/UX DESIGN CONTENTS STRATEGY DEVELOPMENT ● ENTERPRISE E - COMMERCE`
+  - "(GLOBAL)" 부분만 `italic + font-serif` 로 포인트
+  - size: `clamp(32px, 5vw, 76px)` / weight: medium / tracking: `-0.02em`
+- `[S3-ABOUT.BODY]` — 우측 하단 한국어 설명 (muted)
+- `[S3-ABOUT.STATS]` — 하단 3개 메타:
+  - `ESTABLISHED: 2020`
+  - `EMPLOYEES: 24+`
+  - `LOCATION: SEOUL, KR`
+  - 값은 placeholder — 실제 정보로 교체 가능
+
+수정 요청 예:
+- `[S3-ABOUT] 블링크 더 많이` → `BLINK_BG/BLINK_FG/BLINK_TIMES` 배열 길이 늘림
+- `[S3-ABOUT] 블링크 더 빠르게` → `BLINK_DURATION` 감소 (예: 0.5)
+- `[S3-ABOUT] 블링크 안 하고 영구 반전` → `animate` 를 `{ backgroundColor: "#000", color: "#fff" }` 고정
+- `[S3-ABOUT] 블링크 매번 재생` → `blinkDone` 상태 제거하고 threshold 빠져나갔다 돌아오면 다시 실행
+- `[S3-ABOUT] 메타 값 변경` → 하단 배열의 `value` 수정
+- `[S3-ABOUT] 본문 카피 교체` → h2 / p 문단 교체
+
+---
+
+## 공통 시스템
+
+### Scroll lag (전역 시간차 스크롤)
+
+- 위치: `src/lib/useScrollLag.ts` (`useScrollLag()` 훅)
+- 원리: `scrollY` (즉시) − `useSpring(scrollY)` (살짝 느리게 따라옴) = **lag delta** (px)
+- 정지 상태에선 0, 스크롤 중에만 소량의 Y 오프셋 발생 → "마우스 움직임보다 살짝 느리게 콘텐츠가 따라옴" 감각
+- 현재 적용처:
+  - `[S1-HERO]` Header — 히어로 타이포 블록 + 하단 tagline/CTA 블록
+  - `[S2-SWIPE]` — 카드 트랙 `y`, 좌상단 라벨
+  - `[S3-ABOUT]` — 전체 콘텐츠 래퍼
+- 새 섹션에서 쓸 때: `const lagY = useScrollLag()` → 콘텐츠 래퍼에 `style={{ y: lagY }}` 한 줄.
+- 튜닝: `useScrollLag(amplitude)` 의 `amplitude` 인자 (기본 0.35).
 
 ---
 
