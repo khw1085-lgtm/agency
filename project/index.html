@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGO — 함께 만드는 변화</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: #fff;
+    color: #000;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    background: #fff;
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.01em;
+    color: #000;
+    text-decoration: none;
+  }
+
+  .menu-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .menu-btn span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #000;
+    transition: all .3s ease;
+  }
+  .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── HERO ────────────────────────────────────────── */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    padding-top: 90px; /* header offset */
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hero-illustration {
+    width: 400px;
+    height: 400px;
+    flex-shrink: 0;
+  }
+
+  .hero-title {
+    font-size: 66px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    letter-spacing: -.02em;
+  }
+
+  .hero-sub {
+    font-size: 66px;
+    font-weight: 400;
+    line-height: 1;
+    color: #000;
+    letter-spacing: -.02em;
+    margin-top: 8px;
+  }
+
+  /* ── FULL-SCREEN NAV OVERLAY ──────────────────────── */
+  .nav-overlay {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 600px;
+    background: #000;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 50px;
+    transform: translateX(100%);
+    pointer-events: none;
+    transition: transform .45s cubic-bezier(.77,0,.18,1);
+  }
+  .nav-overlay.open {
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .nav-overlay nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .nav-overlay nav a {
+    font-size: 40px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    transition: opacity .2s;
+  }
+  .nav-overlay nav a:hover { opacity: .4; }
+
+  .nav-close {
+    position: absolute;
+    top: 25px;
+    right: 50px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .nav-close span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+  }
+  .nav-close span:nth-child(1) { transform: rotate(45deg); }
+  .nav-close span:nth-child(2) { transform: rotate(-45deg); }
+
+  /* nav footer */
+  .nav-footer {
+    position: absolute;
+    bottom: 40px;
+    left: 50px;
+    font-size: 14px;
+    color: rgba(255,255,255,.45);
+    letter-spacing: .01em;
+  }
+
+  /* ── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width: 768px) {
+    header { padding: 0 24px; height: 64px; }
+    .hero { padding: 0 24px; padding-top: 64px; }
+    .hero-title, .hero-sub { font-size: 36px; }
+    .nav-overlay { padding: 0 24px; }
+    .nav-overlay nav a { font-size: 36px; }
+    .nav-footer { left: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV OVERLAY -->
+<div class="nav-overlay" id="navOverlay" style="padding: 0px 50px;">
+  <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
+    <span></span>
+    <span></span>
+  </button>
+  <nav style="gap: 20px;">
+    <a href="#">Work</a>
+    <a href="#">Services</a>
+    <a href="#">Process</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="nav-footer">hello@axon.studio &nbsp;·&nbsp; Seoul, Korea</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">LOGO</a>
+  <button class="menu-btn" id="menuBtn" aria-label="메뉴 열기">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <h1 class="hero-title">함께 만드는 변화</h1>
+    <p class="hero-sub">We are creators for movement</p>
+  </div>
+  <svg class="hero-illustration" viewBox="0 0 400 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 202 422 L 238 362 C 258 362 278 350 288 332 C 312 332 344 312 344 282 C 368 272 380 244 366 218 C 382 194 374 160 350 152 C 356 122 338 94 308 96 C 296 68 264 56 240 76 C 224 50 193 44 172 63 C 151 48 120 57 112 84 C 86 80 60 100 66 130 C 40 142 30 176 52 200 C 35 224 42 260 70 270 C 66 300 90 330 120 332 C 132 354 163 365 182 362 Z" fill="white" stroke="#2d2a26" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="246" cy="78" r="38" fill="#e8481a"/>
+    <path d="M 240 76 C 224 50 193 44 172 63" stroke="#2d2a26" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>
+</section>
+
+<script>
+  const btn = document.getElementById('menuBtn');
+  const overlay = document.getElementById('navOverlay');
+  const closeBtn = document.getElementById('navClose');
+
+  function toggleMenu(force) {
+    const isOpen = force !== undefined ? force : !overlay.classList.contains('open');
+    overlay.classList.toggle('open', isOpen);
+    btn.classList.toggle('open', isOpen);
+  }
+
+  btn.addEventListener('click', () => toggleMenu());
+  closeBtn.addEventListener('click', () => toggleMenu(false));
+</script>
+</body>
+</html>
