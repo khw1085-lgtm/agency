@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORK — LOGO</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: #fff;
+    color: #000;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── PAGE CURTAIN ── */
+  .page-curtain {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10000;
+    transform-origin: right center;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    background: #fff;
+    z-index: 100;
+  }
+  .logo {
+    font-size: 36px; font-weight: 700; line-height: 1;
+    letter-spacing: -.01em; color: #000; text-decoration: none;
+  }
+  .menu-btn {
+    width: 40px; height: 40px;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; gap: 5px;
+    cursor: pointer; background: none; border: none; padding: 0;
+  }
+  .menu-btn span { display: block; width: 24px; height: 2px; background: #000; transition: all .3s ease; }
+  .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── NAV OVERLAY ── */
+  .nav-overlay {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 600px; background: #000; z-index: 101;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 50px;
+    transform: translateX(100%); pointer-events: none;
+    transition: transform .45s cubic-bezier(.77,0,.18,1);
+  }
+  .nav-overlay.open { transform: translateX(0); pointer-events: all; }
+  .nav-overlay nav { display: flex; flex-direction: column; gap: 20px; }
+  .nav-overlay nav a {
+    font-size: 40px; font-weight: 600; color: #fff;
+    text-decoration: none; letter-spacing: -.02em; line-height: 1.1; transition: opacity .2s;
+  }
+  .nav-overlay nav a:hover { opacity: .4; }
+  .nav-close {
+    position: absolute; top: 25px; right: 50px;
+    width: 40px; height: 40px;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; background: none; border: none; padding: 0;
+  }
+  .nav-close span { display: block; width: 24px; height: 2px; background: #fff; position: absolute; }
+  .nav-close span:nth-child(1) { transform: rotate(45deg); }
+  .nav-close span:nth-child(2) { transform: rotate(-45deg); }
+  .nav-footer {
+    position: absolute; bottom: 40px; left: 50px;
+    font-size: 14px; color: rgba(255,255,255,.45); letter-spacing: .01em;
+  }
+
+  /* ── WORK PAGE ── */
+  .work-main {
+    position: relative;
+    min-height: 1300px;
+    overflow: hidden;
+  }
+
+  .work-title {
+    position: absolute;
+    left: 605px;
+    top: 602px;
+    font-size: clamp(80px, 11.1vw, 200px);
+    font-weight: 600;
+    color: #000;
+    letter-spacing: -.04em;
+    line-height: 1;
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .wi {
+    position: absolute;
+    overflow: hidden;
+    background: #d9d9d9;
+    z-index: 1;
+  }
+  .wi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Figma frame offset: left=-120, top=265 */
+  .wi-1 { left: -120px; top: 323px;  width: 400px; height: 500px; }
+  .wi-2 { left: 400px;  top: 727px;  width: 400px; height: 500px; }
+  .wi-3 { left: 920px;  top: 265px;  width: 400px; height: 500px; }
+  .wi-4 { left: 1440px; top: 641px;  width: 400px; height: 500px; }
+</style>
+</head>
+<body>
+
+<!-- PAGE CURTAIN -->
+<div class="page-curtain" id="pageCurtain"></div>
+
+<!-- NAV OVERLAY -->
+<div class="nav-overlay" id="navOverlay">
+  <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
+    <span></span><span></span>
+  </button>
+  <nav>
+    <a href="#">Work</a>
+    <a href="#">Services</a>
+    <a href="#">Process</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="nav-footer">hello@axon.studio &nbsp;·&nbsp; Seoul, Korea</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="index.html">LOGO</a>
+  <button class="menu-btn" id="menuBtn" aria-label="메뉴 열기">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- WORK CONTENT -->
+<main class="work-main">
+  <h1 class="work-title">WORK</h1>
+  <div class="wi wi-1">
+    <img src="https://www.figma.com/api/mcp/asset/ecf845ad-e164-45b1-a8b0-d18c9ab1751f" alt="">
+  </div>
+  <div class="wi wi-2">
+    <img src="https://www.figma.com/api/mcp/asset/335ddb4c-8e60-4d79-b384-11ac6448b754" alt="">
+  </div>
+  <div class="wi wi-3">
+    <img src="https://www.figma.com/api/mcp/asset/5056b4c0-fe70-4866-956b-cc08ecd0871e" alt="">
+  </div>
+  <div class="wi wi-4">
+    <img src="https://www.figma.com/api/mcp/asset/715a0d78-b6b2-4977-ba46-c9c8261ed2a2" alt="">
+  </div>
+</main>
+
+<script>
+  /* ── NAV ── */
+  const btn = document.getElementById('menuBtn');
+  const overlay = document.getElementById('navOverlay');
+  const closeBtn = document.getElementById('navClose');
+  function toggleMenu(force) {
+    const isOpen = force !== undefined ? force : !overlay.classList.contains('open');
+    overlay.classList.toggle('open', isOpen);
+    btn.classList.toggle('open', isOpen);
+  }
+  btn.addEventListener('click', () => toggleMenu());
+  closeBtn.addEventListener('click', () => toggleMenu(false));
+
+  /* ── ENTRANCE ANIMATION ── */
+  const curtain = document.getElementById('pageCurtain');
+
+  gsap.timeline()
+    // 1. 커튼이 오른쪽으로 걷히며 페이지 등장
+    .to(curtain, {
+      scaleX: 0,
+      duration: 0.75,
+      ease: 'power3.inOut',
+      transformOrigin: 'right center',
+      onComplete: () => curtain.style.pointerEvents = 'none'
+    })
+    // 2. WORK 타이틀 상승
+    .from('.work-title', {
+      y: 80,
+      opacity: 0,
+      duration: 0.9,
+      ease: 'power3.out'
+    }, '-=0.2')
+    // 3. 이미지 순차 등장 (배치 순서대로)
+    .from(['.wi-1', '.wi-3', '.wi-2', '.wi-4'], {
+      y: 120,
+      opacity: 0,
+      duration: 1.0,
+      ease: 'power3.out',
+      stagger: 0.14
+    }, '-=0.65');
+</script>
+</body>
+</html>
