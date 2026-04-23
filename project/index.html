@@ -74,13 +74,18 @@
   .hero {
     scroll-snap-align: start;
     height: 100vh;
+    position: relative;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     padding: 0 50px;
-    padding-top: 90px;
-    overflow: visible;
+    overflow: hidden;
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    margin-top: 90px;
   }
 
   .hero-text h1 {
@@ -100,48 +105,59 @@
     will-change: transform;
   }
 
-  /* ── HERO CARDS ──────────────────────────────────── */
-  .hero-cards {
-    position: relative;
-    width: 660px;
-    height: 650px;
-    flex-shrink: 0;
-    z-index: 200;
+  /* ── HERO STRIP ──────────────────────────────────── */
+  .hero-strip-wrap {
+    position: absolute;
+    left: 833px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 45px;
+    z-index: 3;
+    cursor: default;
   }
 
-  .card-wrap {
-    position: absolute;
+  .hero-strip {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 0;
+    width: max-content;
   }
 
-  .card-1-wrap { left: 0;    top: 67px; width: 516px; height: 583px; }
-  .card-3-wrap { left: 65px; top: 24px; width: 514px; height: 582px; }
-  .card-4-wrap { left: 65px; top: 0;    width: 594px; height: 628px; }
-
-  .card {
-    background: #d9d9d9;
-    overflow: hidden;
+  .strip-img {
+    width: 400px;
+    height: 500px;
     flex-shrink: 0;
-  }
-  .card-1 { width: 400px; height: 500px; transform: rotate(-15deg); }
-  .card-2 {
-    position: absolute;
-    left: 82px; top: 67px;
-    width: 400px; height: 500px;
-    background: #d9d9d9;
     overflow: hidden;
+    background: #d9d9d9;
   }
-  .card-3 { width: 400px; height: 500px; transform: rotate(15deg); }
-  .card-4 { width: 400px; height: 500px; transform: rotate(30deg); }
 
-  .card img, .card-2 img {
+  .strip-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
+
+  /* ── IC ARROW ────────────────────────────────────── */
+  .ic-arrow {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 45px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #000;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 0;
+    transition: opacity .2s;
+  }
+  .ic-arrow:hover { opacity: .7; }
 
   /* ── PAGE CURTAIN ────────────────────────────────── */
   .page-curtain {
@@ -152,31 +168,6 @@
     transform: scaleX(0);
     transform-origin: left center;
     pointer-events: none;
-  }
-
-  /* ── HOVER CURSOR ────────────────────────────────── */
-  .hover-cursor {
-    position: fixed;
-    top: 0; left: 0;
-    width: 160px;
-    height: 160px;
-    margin-left: -80px;
-    margin-top: -80px;
-    background: #000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0;
-  }
-  .hover-cursor span {
-    font-size: 32px;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: -.02em;
-    line-height: 1;
   }
 
   /* ── FULL-SCREEN NAV OVERLAY ──────────────────────── */
@@ -201,7 +192,7 @@
   .nav-overlay nav {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
   }
   .nav-overlay nav a {
     font-size: 40px;
@@ -238,7 +229,6 @@
   .nav-close span:nth-child(1) { transform: rotate(45deg); }
   .nav-close span:nth-child(2) { transform: rotate(-45deg); }
 
-  /* nav footer */
   .nav-footer {
     position: absolute;
     bottom: 40px;
@@ -326,24 +316,6 @@
     object-fit: cover;
     display: block;
   }
-
-  /* ── RESPONSIVE ─────────────────────────────────── */
-  @media (max-width: 768px) {
-    header { padding: 0 24px; height: 64px; }
-    .hero { padding: 0 24px; padding-top: 64px; flex-direction: column; justify-content: center; gap: 32px; }
-    .hero-text h1 { font-size: 36px; }
-    .hero-cards { width: 100%; max-width: 300px; height: 296px; }
-    .card-1-wrap { width: 235px; height: 266px; top: 31px; }
-    .card-1 { width: 182px; height: 228px; }
-    .card-2 { left: 37px; top: 31px; width: 182px; height: 228px; }
-    .card-3-wrap { left: 30px; top: 11px; width: 234px; height: 265px; }
-    .card-3 { width: 182px; height: 228px; }
-    .card-4-wrap { left: 30px; top: 0; width: 271px; height: 286px; }
-    .card-4 { width: 182px; height: 228px; }
-    .nav-overlay { padding: 0 24px; }
-    .nav-overlay nav a { font-size: 36px; }
-    .nav-footer { left: 24px; }
-  }
 </style>
 </head>
 <body>
@@ -356,16 +328,13 @@
 <!-- PAGE CURTAIN -->
 <div class="page-curtain" id="pageCurtain"></div>
 
-<!-- HOVER CURSOR -->
-<div class="hover-cursor" id="hoverCursor"><span>WORK</span></div>
-
 <!-- NAV OVERLAY -->
-<div class="nav-overlay" id="navOverlay" style="padding: 0px 50px;">
+<div class="nav-overlay" id="navOverlay">
   <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
     <span></span>
     <span></span>
   </button>
-  <nav style="gap: 20px;">
+  <nav>
     <a href="#">Work</a>
     <a href="#">Services</a>
     <a href="#">Process</a>
@@ -389,26 +358,26 @@
   <div class="hero-text">
     <h1><span class="word">We</span> <span class="word">are</span> <span class="word">creators</span><br><span class="word">for</span> <span class="word">movement</span></h1>
   </div>
-  <div class="hero-cards">
-    <div class="card-wrap card-1-wrap">
-      <div class="card card-1">
-        <img src="https://www.figma.com/api/mcp/asset/5b3cb231-83ed-4f2a-8838-7728d6bb9492" alt="">
-      </div>
-    </div>
-    <div class="card-2">
-      <img src="https://www.figma.com/api/mcp/asset/e97f4a1d-5ca1-4e09-8cf0-c4b328970bfb" alt="">
-    </div>
-    <div class="card-wrap card-3-wrap">
-      <div class="card card-3">
-        <img src="https://www.figma.com/api/mcp/asset/ef254bef-c0f4-4269-b12a-ff0e90b01bdd" alt="">
-      </div>
-    </div>
-    <div class="card-wrap card-4-wrap">
-      <div class="card card-4">
-        <img src="https://www.figma.com/api/mcp/asset/b78771c3-01c3-477a-ae40-84945d9c5c80" alt="">
-      </div>
+
+  <div class="hero-strip-wrap" id="heroStripWrap">
+    <div class="hero-strip" id="heroStrip">
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/636bea3e-eea7-4aca-ab61-1537e23bf9ff" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/093e414f-59cc-4d3e-a8f0-923a97cc7c5d" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/f7078120-a5b6-4bed-812e-ac02fb8b90fd" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/9a88f11e-24a8-474e-9a93-7aa35be2dcbf" alt=""></div>
+      <!-- duplicates for seamless loop -->
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/636bea3e-eea7-4aca-ab61-1537e23bf9ff" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/093e414f-59cc-4d3e-a8f0-923a97cc7c5d" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/f7078120-a5b6-4bed-812e-ac02fb8b90fd" alt=""></div>
+      <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/9a88f11e-24a8-474e-9a93-7aa35be2dcbf" alt=""></div>
     </div>
   </div>
+
+  <button class="ic-arrow" id="icArrow" aria-label="Work 보기">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <path d="M10 5l9 9-9 9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 </section>
 
 <!-- SECTION 2 -->
@@ -447,11 +416,6 @@
   btn.addEventListener('click', () => toggleMenu());
   closeBtn.addEventListener('click', () => toggleMenu(false));
 
-  /* ── CARD DROP (GSAP) ── */
-  const heroCards = document.querySelector('.hero-cards');
-  const dropTargets = ['.card-1-wrap', '.card-2', '.card-3-wrap', '.card-4-wrap'];
-  let dropComplete = false;
-
   /* ── HERO TEXT SCATTER → ASSEMBLE (char by char) ── */
   document.querySelectorAll('.hero-text .word').forEach(word => {
     word.innerHTML = word.textContent.split('').map(c => `<span class="char">${c}</span>`).join('');
@@ -470,7 +434,6 @@
     delay: 0.1
   });
 
-  /* 호버: 글자가 살짝 흩어졌다가 다시 모임 */
   const heroH1 = document.querySelector('.hero-text h1');
   heroH1.addEventListener('mouseenter', () => {
     gsap.to(heroChars, {
@@ -491,110 +454,54 @@
     });
   });
 
-  gsap.from(dropTargets, {
-    y: '-120vh',
-    duration: 1.4,
-    ease: 'back.out(1.4)',
-    stagger: 0.2,
-    delay: 0.8,
-    onComplete() {
-      heroCards.style.zIndex = '';
-      dropComplete = true;
-    }
-  });
+  /* ── HERO STRIP INFINITE SCROLL ON HOVER ── */
+  const heroStrip = document.getElementById('heroStrip');
+  const heroStripWrap = document.getElementById('heroStripWrap');
+  const STRIP_W = 1600;
+  const SCROLL_DUR = 10;
+  let scrolling = false;
 
-  /* ── PARALLAX HOVER ── */
-  const parallaxCards = [
-    { sel: '.card-1-wrap', mx: 0.5, my: 0.35, tilt:  3 },
-    { sel: '.card-2',       mx: 0.9, my: 0.60, tilt: -5 },
-    { sel: '.card-3-wrap', mx: 1.3, my: 0.85, tilt:  7 },
-    { sel: '.card-4-wrap', mx: 1.8, my: 1.10, tilt: -9 },
-  ].map(c => ({ ...c, el: document.querySelector(c.sel) }));
-
-  const MAX_PX = 28;
-
-  heroCards.addEventListener('mousemove', (e) => {
-    if (!dropComplete) return;
-    const r  = heroCards.getBoundingClientRect();
-    const nx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
-    const ny = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
-
-    parallaxCards.forEach(({ el, mx, my, tilt }) => {
-      gsap.to(el, {
-        x: nx * mx * MAX_PX,
-        y: ny * my * MAX_PX,
-        rotation: nx * tilt,
-        duration: 0.55,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
+  function loopScroll(startX) {
+    const dist = Math.abs(-STRIP_W - startX);
+    const dur = (dist / STRIP_W) * SCROLL_DUR;
+    gsap.to(heroStrip, {
+      x: -STRIP_W,
+      duration: dur,
+      ease: 'none',
+      onComplete() {
+        if (!scrolling) return;
+        gsap.set(heroStrip, { x: 0 });
+        loopScroll(0);
+      }
     });
+  }
+
+  heroStripWrap.addEventListener('mouseenter', () => {
+    scrolling = true;
+    gsap.killTweensOf(heroStrip);
+    loopScroll(gsap.getProperty(heroStrip, 'x') || 0);
   });
 
-  /* ── HOVER CURSOR (GSAP) ── */
-  const cursor = document.getElementById('hoverCursor');
-
-  gsap.set(cursor, { scale: 0.6 });
-
-  document.addEventListener('mousemove', (e) => {
-    gsap.to(cursor, {
-      x: e.clientX,
-      y: e.clientY,
-      duration: 0.35,
-      ease: 'power2.out',
-      overwrite: 'auto'
-    });
+  heroStripWrap.addEventListener('mouseleave', () => {
+    scrolling = false;
+    gsap.killTweensOf(heroStrip);
+    gsap.to(heroStrip, { x: 0, duration: 1.5, ease: 'power2.out' });
   });
 
-  heroCards.addEventListener('mouseenter', () => {
-    document.body.style.cursor = 'none';
-    gsap.to(cursor, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(1.6)' });
-  });
-
-  heroCards.addEventListener('mouseleave', () => {
-    document.body.style.cursor = '';
-    gsap.to(cursor, { opacity: 0, scale: 0.6, duration: 0.2, ease: 'power2.in' });
-
-    if (dropComplete) {
-      parallaxCards.forEach(({ el }) => {
-        gsap.to(el, {
-          x: 0, y: 0, rotation: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          overwrite: 'auto'
-        });
-      });
-    }
-  });
-
-  /* ── PAGE TRANSITION ── */
+  /* ── PAGE TRANSITION (ic_arrow → work.html) ── */
   const pageCurtain = document.getElementById('pageCurtain');
+  const icArrow = document.getElementById('icArrow');
   let transitioning = false;
 
-  heroCards.addEventListener('click', () => {
+  icArrow.addEventListener('click', () => {
     if (transitioning) return;
     transitioning = true;
-
-    // 커서 즉시 숨김
-    gsap.to(cursor, { opacity: 0, scale: 0.6, duration: 0.15 });
-    document.body.style.cursor = '';
-
-    // 카드들이 살짝 뒤로 물러나며 커튼 등장
-    gsap.to(['.card-1-wrap', '.card-2', '.card-3-wrap', '.card-4-wrap'], {
-      scale: 0.92,
-      opacity: 0,
-      duration: 0.35,
-      ease: 'power2.in',
-      stagger: 0.05
-    });
-
     gsap.timeline()
       .to(pageCurtain, {
         scaleX: 1,
         duration: 0.65,
         ease: 'power3.inOut',
-        transformOrigin: 'left center',
-        delay: 0.2
+        transformOrigin: 'left center'
       })
       .call(() => { window.location.href = 'work.html'; });
   });
@@ -615,12 +522,10 @@
 
   document.querySelectorAll('.s2-row span').forEach(span => {
     const match = serviceImages.find(s => s.text === span.textContent.trim());
-
     span.addEventListener('mouseenter', () => {
       if (match) servicePreviewImg.src = match.src;
       gsap.to(servicePreview, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' });
     });
-
     span.addEventListener('mouseleave', () => {
       gsap.to(servicePreview, { opacity: 0, scale: 0.85, duration: 0.25, ease: 'power2.in' });
     });
