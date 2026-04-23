@@ -103,22 +103,29 @@
     letter-spacing: -.04em;
     line-height: 1;
     white-space: nowrap;
-    z-index: 2;
+    z-index: 0;
   }
 
   .wi {
     position: absolute;
     overflow: hidden;
     background: #d9d9d9;
-    z-index: 1;
+    z-index: 2;
   }
-  .wi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wi img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .wi:hover img { transform: scale(1.07); }
 
-  /* Figma frame offset: left=-120, top=265 */
-  .wi-1 { left: -120px; top: 323px;  width: 400px; height: 500px; }
-  .wi-2 { left: 400px;  top: 727px;  width: 400px; height: 500px; }
-  .wi-3 { left: 920px;  top: 265px;  width: 400px; height: 500px; }
-  .wi-4 { left: 1440px; top: 641px;  width: 400px; height: 500px; }
+  /* Figma frame offset: left=-120, top=90 */
+  .wi-1 { left: -120px; top: 148px;  width: 400px; height: 500px; }
+  .wi-2 { left: 400px;  top: 552px;  width: 400px; height: 500px; }
+  .wi-3 { left: 920px;  top: 90px;   width: 400px; height: 500px; }
+  .wi-4 { left: 1440px; top: 466px;  width: 400px; height: 500px; }
 </style>
 </head>
 <body>
@@ -182,7 +189,7 @@
   const curtain = document.getElementById('pageCurtain');
 
   gsap.timeline()
-    // 1. 커튼이 오른쪽으로 걷히며 페이지 등장
+    // 1. 커튼 걷힘
     .to(curtain, {
       scaleX: 0,
       duration: 0.75,
@@ -190,21 +197,23 @@
       transformOrigin: 'right center',
       onComplete: () => curtain.style.pointerEvents = 'none'
     })
-    // 2. WORK 타이틀 상승
-    .from('.work-title', {
-      y: 80,
-      opacity: 0,
-      duration: 0.9,
-      ease: 'power3.out'
-    }, '-=0.2')
-    // 3. 이미지 순차 등장 (배치 순서대로)
+    // 2. 이미지 scale 0.5 → 1 순차 팝업
     .from(['.wi-1', '.wi-3', '.wi-2', '.wi-4'], {
-      y: 120,
+      scale: 0.5,
       opacity: 0,
-      duration: 1.0,
+      duration: 1.1,
       ease: 'power3.out',
-      stagger: 0.14
-    }, '-=0.65');
+      stagger: 0.18,
+      transformOrigin: 'center center'
+    }, '-=0.05')
+    // 3. WORK 타이틀: 이미지보다 늦게, 뒤에서 페이드인
+    .from('.work-title', {
+      opacity: 0,
+      scale: 0.9,
+      duration: 1.3,
+      ease: 'power3.out',
+      transformOrigin: 'left center'
+    }, '-=0.7');
 </script>
 </body>
 </html>
