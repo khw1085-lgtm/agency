@@ -105,6 +105,46 @@
     will-change: transform;
   }
 
+  /* ── LOADER ─────────────────────────────────────── */
+  .loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 400px;
+  }
+
+  .loader-pct {
+    font-size: 18px;
+    font-weight: 400;
+    color: #000;
+    letter-spacing: -.01em;
+  }
+
+  .loader-track {
+    width: 400px;
+    height: 2px;
+    background: #e8e8e8;
+    position: relative;
+  }
+
+  .loader-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 2px;
+    width: 0;
+    background: #000;
+  }
+
   /* ── HERO STRIP ──────────────────────────────────── */
   .hero-strip-wrap {
     position: absolute;
@@ -320,6 +360,16 @@
 </head>
 <body>
 
+<!-- LOADER -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-wrap">
+    <span class="loader-pct" id="loaderPct">0%</span>
+    <div class="loader-track">
+      <div class="loader-fill" id="loaderFill"></div>
+    </div>
+  </div>
+</div>
+
 <!-- SERVICE PREVIEW -->
 <div class="service-preview" id="servicePreview">
   <img id="servicePreviewImg" src="" alt="">
@@ -416,43 +466,42 @@
   btn.addEventListener('click', () => toggleMenu());
   closeBtn.addEventListener('click', () => toggleMenu(false));
 
-  /* ── HERO TEXT SCATTER → ASSEMBLE (char by char) ── */
-  document.querySelectorAll('.hero-text .word').forEach(word => {
-    word.innerHTML = word.textContent.split('').map(c => `<span class="char">${c}</span>`).join('');
-  });
-  const heroChars = document.querySelectorAll('.hero-text .char');
+  /* ── LOADING BAR → HERO ANIMATION ── */
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-  gsap.from(heroChars, {
-    x: () => gsap.utils.random(-window.innerWidth * 0.5, window.innerWidth * 0.5),
-    y: () => gsap.utils.random(-window.innerHeight * 0.45, window.innerHeight * 0.45),
-    rotation: () => gsap.utils.random(-90, 90),
-    scale: () => gsap.utils.random(0.1, 2.0),
-    opacity: 0,
-    duration: 1.0,
-    ease: 'power3.out',
-    stagger: { each: 0.04, from: 'random' },
-    delay: 0.1
-  });
+  // 첫 4장만 (뒤 4장은 루프용 복제본)
+  const stripImgs = Array.from(document.querySelectorAll('.strip-img')).slice(0, 4);
 
-  const heroH1 = document.querySelector('.hero-text h1');
-  heroH1.addEventListener('mouseenter', () => {
-    gsap.to(heroChars, {
-      x: () => gsap.utils.random(-50, 50),
-      y: () => gsap.utils.random(-35, 35),
-      rotation: () => gsap.utils.random(-25, 25),
-      duration: 0.4,
-      ease: 'power2.out',
-      stagger: { each: 0.02, from: 'random' }
-    });
-  });
-  heroH1.addEventListener('mouseleave', () => {
-    gsap.to(heroChars, {
-      x: 0, y: 0, rotation: 0,
-      duration: 0.6,
+  // 이미지: 화면 위에서 대기, 스트립은 중앙으로 이동
+  gsap.set(stripImgs, { y: -vh });
+  gsap.set('#heroStripWrap', { x: vw * 0.5 - 833 - 400 }); // 이미지들이 화면 가운데 착지
+  gsap.set('.hero-text', { x: -vw * 0.35, opacity: 0 });
+  gsap.set('#icArrow', { opacity: 0 });
+
+  const pctEl = document.getElementById('loaderPct');
+  const counter = { val: 0 };
+
+  gsap.timeline()
+    // 로딩바
+    .to(counter, { val: 100, duration: 2, ease: 'none',
+      onUpdate() { pctEl.textContent = Math.round(counter.val) + '%'; }
+    }, 0)
+    .to('#loaderFill', { width: 400, duration: 2, ease: 'none' }, 0)
+    .to('#loaderOverlay', { opacity: 0, duration: 0.4, ease: 'power2.out',
+      onComplete() { document.getElementById('loaderOverlay').style.display = 'none'; }
+    })
+    // Phase 1: 이미지 한 장씩 위에서 가운데로 낙하
+    .to(stripImgs, {
+      y: 0,
+      duration: 0.65,
       ease: 'power3.out',
-      stagger: { each: 0.02, from: 'center' }
-    });
-  });
+      stagger: 0.18
+    }, '-=0.05')
+    // Phase 2: 텍스트가 좌측에서 밀고 들어오면서 이미지가 우측 자리로 이동
+    .to('.hero-text', { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '+=0.3')
+    .to('#heroStripWrap', { x: 0, duration: 0.8, ease: 'power3.out' }, '<')
+    .to('#icArrow', { opacity: 1, duration: 0.4, ease: 'power2.out' }, '-=0.3');
 
   /* ── HERO STRIP INFINITE SCROLL ON HOVER ── */
   const heroStrip = document.getElementById('heroStrip');
