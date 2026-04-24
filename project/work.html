@@ -91,19 +91,30 @@
     position: relative;
     min-height: 1300px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
   }
 
   .work-title {
     position: absolute;
-    left: 605px;
-    top: 602px;
-    font-size: clamp(80px, 11.1vw, 200px);
+    left: 50px;
+    top: 90px;
+    font-size: 150px;
     font-weight: 600;
     color: #000;
-    letter-spacing: -.04em;
+    letter-spacing: -.03em;
     line-height: 1;
     white-space: nowrap;
-    z-index: 0;
+    z-index: 1;
+  }
+
+  /* 1960px 컨테이너를 뷰포트 중앙 정렬 */
+  .work-inner {
+    position: relative;
+    margin-top: 269px;
+    width: 1960px;
+    height: 962px;
+    flex-shrink: 0;
   }
 
   .wi {
@@ -121,11 +132,66 @@
   }
   .wi:hover img { transform: scale(1.07); }
 
-  /* Figma frame offset: left=-120, top=90 */
-  .wi-1 { left: -120px; top: 148px;  width: 400px; height: 500px; }
-  .wi-2 { left: 400px;  top: 552px;  width: 400px; height: 500px; }
-  .wi-3 { left: 920px;  top: 90px;   width: 400px; height: 500px; }
-  .wi-4 { left: 1440px; top: 466px;  width: 400px; height: 500px; }
+  /* 피그마 좌표 (work-inner 기준) */
+  .wi-1 { left:    0px; top:  58px; width: 400px; height: 500px; }
+  .wi-2 { left:  520px; top: 462px; width: 400px; height: 500px; }
+  .wi-3 { left: 1040px; top:   0px; width: 400px; height: 500px; }
+  .wi-4 { left: 1560px; top: 376px; width: 400px; height: 500px; }
+
+  /* ══════════════════════════════════════
+     MOBILE  ≤ 640px
+  ══════════════════════════════════════ */
+  @media (max-width: 640px) {
+    /* ── Header ── */
+    header { height: 60px; padding: 0 20px; }
+    .logo { font-size: 24px; }
+
+    /* ── Nav overlay: 풀스크린 ── */
+    .nav-overlay { width: 100%; padding: 0 20px; }
+    .nav-close { right: 20px; top: 18px; }
+    .nav-footer { left: 20px; }
+    .nav-overlay nav a { font-size: 30px; }
+
+    /* ── Work 페이지 ── */
+    .work-main {
+      display: block;
+      min-height: auto;
+      padding-top: 60px;
+    }
+
+    .work-title {
+      position: static;
+      display: block;
+      font-size: 52px;
+      padding: 20px 20px 0;
+      white-space: normal;
+    }
+
+    /* 이미지: 2열 스태거 그리드 */
+    .work-inner {
+      position: static;
+      width: 100%;
+      height: auto;
+      margin: 20px 0 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 20px 60px;
+    }
+
+    /* absolute 좌표 전부 무효화 */
+    .work-inner .wi {
+      position: static;
+      width: auto;
+      height: auto;
+      left: auto;
+      top: auto;
+      aspect-ratio: 3 / 4;
+    }
+
+    /* 짝수 번째 이미지를 아래로 밀어 스태거 효과 */
+    .wi-2, .wi-4 { margin-top: 40px; }
+  }
 </style>
 </head>
 <body>
@@ -158,17 +224,19 @@
 <!-- WORK CONTENT -->
 <main class="work-main">
   <h1 class="work-title">WORK</h1>
-  <div class="wi wi-1">
-    <img src="https://www.figma.com/api/mcp/asset/ecf845ad-e164-45b1-a8b0-d18c9ab1751f" alt="">
-  </div>
-  <div class="wi wi-2">
-    <img src="https://www.figma.com/api/mcp/asset/335ddb4c-8e60-4d79-b384-11ac6448b754" alt="">
-  </div>
-  <div class="wi wi-3">
-    <img src="https://www.figma.com/api/mcp/asset/5056b4c0-fe70-4866-956b-cc08ecd0871e" alt="">
-  </div>
-  <div class="wi wi-4">
-    <img src="https://www.figma.com/api/mcp/asset/715a0d78-b6b2-4977-ba46-c9c8261ed2a2" alt="">
+  <div class="work-inner">
+    <div class="wi wi-1">
+      <img src="https://www.figma.com/api/mcp/asset/6943acd1-cce0-49c8-8a35-4796e46aae73" alt="">
+    </div>
+    <div class="wi wi-2">
+      <img src="https://www.figma.com/api/mcp/asset/3d797c2d-0117-4271-b83b-ed2fbe8a5663" alt="">
+    </div>
+    <div class="wi wi-3">
+      <img src="https://www.figma.com/api/mcp/asset/3d455bd6-db96-48f1-90c0-309d79089d34" alt="">
+    </div>
+    <div class="wi wi-4">
+      <img src="https://www.figma.com/api/mcp/asset/12c6ca0f-9817-45b2-9f2f-4c9ac44715b1" alt="">
+    </div>
   </div>
 </main>
 
@@ -197,7 +265,14 @@
       transformOrigin: 'right center',
       onComplete: () => curtain.style.pointerEvents = 'none'
     })
-    // 2. 이미지 scale 0.5 → 1 순차 팝업
+    // 2. WORK 타이틀 페이드인
+    .from('.work-title', {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.1')
+    // 3. 이미지 scale 0.5 → 1 순차 팝업
     .from(['.wi-1', '.wi-3', '.wi-2', '.wi-4'], {
       scale: 0.5,
       opacity: 0,
@@ -205,15 +280,7 @@
       ease: 'power3.out',
       stagger: 0.18,
       transformOrigin: 'center center'
-    }, '-=0.05')
-    // 3. WORK 타이틀: 이미지보다 늦게, 뒤에서 페이드인
-    .from('.work-title', {
-      opacity: 0,
-      scale: 0.9,
-      duration: 1.3,
-      ease: 'power3.out',
-      transformOrigin: 'left center'
-    }, '-=0.7');
+    }, '-=0.5')
 </script>
 </body>
 </html>
