@@ -3,630 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOGO — 함께 만드는 변화</title>
+<title>LOGO</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.spline.design/@splinetool/hana-viewer@1.2.52/hana-viewer.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-  html, body {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+    color: #fff;
+    cursor: none;
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    min-width: 320px;
+  }
+
+  .page-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .thumbnail-main {
+    position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    background: #fff;
-    color: #000;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-font-smoothing: antialiased;
+    perspective: 1200px;
+    perspective-origin: 50% 35%;
+    background:
+      radial-gradient(circle at 18% 74%, rgba(20, 72, 255, .2), transparent 18%),
+      linear-gradient(180deg, #000 0%, #030303 100%);
   }
 
-  /* ── HEADER ─────────────────────────────────────── */
-  header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 90px;
+  .spline-section {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 50px;
-    background: #fff;
-    z-index: 100;
-  }
-
-  .logo {
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -.01em;
-    color: #000;
-    text-decoration: none;
-  }
-
-  .menu-btn {
-    width: 40px; height: 40px;
-    display: flex;
-    flex-direction: column;
+    align-items: stretch;
     justify-content: center;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-  .menu-btn span {
-    display: block;
-    width: 24px; height: 2px;
-    background: #000;
-    transition: all .4s cubic-bezier(.77,0,.18,1);
-  }
-  .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  /* ── SECTIONS WRAPPER ─────────────────────────── */
-  #sections { will-change: transform; }
-
-  /* ── HERO ────────────────────────────────────────── */
-  .hero {
     height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0 50px;
-    overflow: visible;
-  }
-
-  .hero-text {
-    position: relative;
-    z-index: 2;
-    flex-shrink: 0;
-    margin-top: 90px;
-    will-change: transform, opacity;
-  }
-
-  .hero-text h1 {
-    font-size: 66px;
-    font-weight: 600;
-    line-height: 1.1;
-    color: #000;
-    letter-spacing: -.02em;
-    cursor: default;
-  }
-
-  .hero-text h1 .word { display: inline-block; }
-
-  /* ── LOADER ─────────────────────────────────────── */
-  .loader-overlay {
-    position: fixed;
-    inset: 0;
-    background: #fff;
-    z-index: 9000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .loader-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 400px;
-  }
-
-  .loader-pct {
-    font-size: 18px;
-    font-weight: 400;
-    color: #000;
-    letter-spacing: -.01em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .loader-track {
-    width: 400px;
-    height: 2px;
-    background: #e8e8e8;
-    position: relative;
     overflow: hidden;
-  }
-
-  .loader-fill {
-    position: absolute;
-    left: 0; top: 0;
-    height: 2px;
-    width: 0;
     background: #000;
   }
 
-  /* ── HERO STRIP ──────────────────────────────────── */
-  .hero-strip-wrap {
+  hana-viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .thumbnail-main::before,
+  .thumbnail-main::after {
+    content: "";
     position: absolute;
-    left: 833px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 45px;
+    top: 0;
+    bottom: 0;
     z-index: 3;
-    cursor: default;
+    width: 18vw;
+    pointer-events: none;
+  }
+
+  .thumbnail-main::before {
+    left: 0;
+    background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, .75) 48%, transparent 100%);
+  }
+
+  .thumbnail-main::after {
+    right: 0;
+    background: linear-gradient(270deg, #000 0%, rgba(0, 0, 0, .75) 48%, transparent 100%);
+  }
+
+  .orbit-stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max-content;
+    transform: translate(-50%, -46%) rotate(-9deg) rotateX(58deg);
+    transform-origin: center;
+    transform-style: preserve-3d;
+    transition: transform 1.05s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .thumbnail-track {
+    --thumb-gap: 28px;
+
+    display: flex;
+    align-items: center;
+    gap: var(--thumb-gap);
+    width: max-content;
+    animation: thumbnail-flow 42s linear infinite;
+    transform-style: preserve-3d;
     will-change: transform;
   }
 
-  .hero-strip {
-    display: flex;
-    gap: 0;
-    width: max-content;
-  }
-
-  .strip-img {
+  .thumb-card {
+    position: relative;
     width: 400px;
     height: 500px;
-    flex-shrink: 0;
+    flex: 0 0 auto;
     overflow: hidden;
-    background: #d9d9d9;
-    will-change: transform;
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 30px;
+    background: #111;
+    box-shadow:
+      0 26px 42px rgba(0, 0, 0, .5),
+      0 74px 120px rgba(0, 0, 0, .68);
+    transform: translateZ(0);
+    transition:
+      opacity .9s cubic-bezier(.16, 1, .3, 1),
+      filter .9s cubic-bezier(.16, 1, .3, 1),
+      transform 1s cubic-bezier(.16, 1, .3, 1);
+    transition-delay: calc(var(--card-index, 0) * 58ms);
+    backface-visibility: hidden;
   }
 
-  .strip-img img {
+  .thumb-card img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.7s cubic-bezier(.25,.46,.45,.94);
+    filter: saturate(.9) contrast(1.08) brightness(.82);
+    transform: scale(1.04);
   }
-  .strip-img:hover img { transform: scale(1.04); }
 
-  /* ── IC ARROW ────────────────────────────────────── */
-  .ic-arrow {
+  .thumb-card::after {
+    content: "";
     position: absolute;
-    right: 50px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 45px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: #000;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    padding: 0;
-    will-change: transform, opacity;
-  }
-  .ic-arrow svg {
-    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
-  }
-  .ic-arrow:hover svg { transform: translateX(5px); }
-
-  /* ── PAGE CURTAIN ────────────────────────────────── */
-  .page-curtain {
-    position: fixed;
     inset: 0;
-    background: #000;
-    z-index: 10000;
-    transform: scaleX(0);
-    transform-origin: left center;
+    background:
+      linear-gradient(120deg, rgba(255, 255, 255, .16), transparent 34%),
+      linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, .34) 100%);
     pointer-events: none;
   }
 
-  /* ── NAV OVERLAY ─────────────────────────────────── */
-  .nav-overlay {
-    position: fixed;
-    top: 0; right: 0; bottom: 0;
-    width: 600px;
-    background: #000;
-    z-index: 500;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 50px;
-    transform: translateX(100%);
-    pointer-events: none;
-    transition: transform .55s cubic-bezier(.77,0,.18,1);
+  .thumb-label {
+    display: none;
   }
-  .nav-overlay.open { transform: translateX(0); pointer-events: all; }
-  .nav-overlay nav { display: flex; flex-direction: column; gap: 20px; }
-  .nav-overlay nav a {
-    font-size: 40px;
-    font-weight: 600;
+
+  .hero-copy {
+    position: absolute;
+    left: 50%;
+    top: calc(38% - 50px);
+    z-index: 6;
     color: #fff;
-    text-decoration: none;
-    letter-spacing: -.02em;
-    line-height: 1.1;
-    display: inline-block;
-    transition: opacity .25s ease, transform .4s cubic-bezier(.25,.46,.45,.94);
-  }
-  .nav-overlay nav a:hover { opacity: .3; transform: translateX(14px); }
-
-  .nav-close {
-    position: absolute;
-    top: 25px; right: 50px;
-    width: 40px; height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-  .nav-close span {
-    display: block;
-    width: 24px; height: 2px;
-    background: #fff;
-    position: absolute;
-    transition: opacity .25s ease;
-  }
-  .nav-close span:nth-child(1) { transform: rotate(45deg); }
-  .nav-close span:nth-child(2) { transform: rotate(-45deg); }
-  .nav-close:hover span { opacity: .4; }
-
-  .nav-footer {
-    position: absolute;
-    bottom: 40px; left: 50px;
-    font-size: 14px;
-    color: rgba(255,255,255,.45);
-    letter-spacing: .01em;
-  }
-
-  /* ── SECTION 2 ──────────────────────────────────── */
-  .section2 {
-    height: 100vh;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 50px;
-    gap: 51px;
-  }
-
-  .s2-heading { display: flex; flex-direction: column; gap: 8px; }
-
-  .s2-sub {
-    font-size: 40px;
-    font-weight: 600;
-    color: #000;
-    line-height: 1.1;
-    letter-spacing: -.02em;
-    will-change: transform, opacity;
-  }
-
-  .s2-title {
-    font-size: 100px;
-    font-weight: 600;
-    color: #000;
-    line-height: 1;
-    letter-spacing: -.03em;
-    will-change: transform, opacity;
-  }
-
-  .s2-services { display: flex; flex-direction: column; gap: 20px; }
-
-  .s2-row {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    flex-wrap: nowrap;
-  }
-
-  .s2-row span {
-    font-size: 64px;
-    font-weight: 600;
-    color: #c8c8c8;
-    line-height: 1.1;
-    letter-spacing: -.02em;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(72px, 15vw, 260px);
+    font-weight: 500;
+    line-height: .82;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    text-align: center;
     white-space: nowrap;
-    cursor: default;
-    will-change: transform, opacity;
-    transition: color 0.45s cubic-bezier(.25,.46,.45,.94);
-  }
-  .s2-row span:hover { color: #000; }
-
-  /* ── SERVICE PREVIEW ─────────────────────────────── */
-  .service-preview {
-    position: fixed;
-    top: 0; left: 0;
-    width: 220px; height: 220px;
     pointer-events: none;
-    z-index: 400;
-    opacity: 0;
-    overflow: hidden;
-    border-radius: 2px;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 0 18px rgba(255, 255, 255, .16);
+    transition:
+      opacity .95s cubic-bezier(.16, 1, .3, 1),
+      filter .95s cubic-bezier(.16, 1, .3, 1),
+      transform 1.05s cubic-bezier(.16, 1, .3, 1);
   }
-  .service-preview img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
+
+  .thumbnail-main.is-scroll-down .orbit-stage {
+    transform: translate(-50%, -36%) rotate(-9deg) rotateX(64deg) scale(.94);
+  }
+
+  .thumbnail-main.is-scroll-up .orbit-stage {
+    transform: translate(-50%, -56%) rotate(-9deg) rotateX(52deg) scale(1.03);
+  }
+
+  .thumbnail-main.is-scroll-down .hero-copy {
+    opacity: .62;
+    filter: blur(1px);
+    transform: translate(-50%, -50%) translateY(-92px) scale(.96);
+  }
+
+  .thumbnail-main.is-scroll-up .hero-copy {
+    opacity: .78;
+    filter: blur(.6px);
+    transform: translate(-50%, -50%) translateY(72px) scale(1.02);
+  }
+
+  .thumbnail-main.is-scroll-down .thumb-card {
+    opacity: .72;
+    filter: brightness(.66) blur(.8px);
+    transform: translateY(90px) translateZ(-36px) scale(.96);
+  }
+
+  .thumbnail-main.is-scroll-up .thumb-card {
+    opacity: .84;
+    filter: brightness(.78) blur(.4px);
+    transform: translateY(-74px) translateZ(24px) scale(1.02);
+  }
+
+  .custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 24px rgba(255, 255, 255, .6);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+  }
+
+  @keyframes thumbnail-flow {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(-50% - (var(--thumb-gap) / 2)));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .orbit-stage {
+      transform: translate(-50%, -46%) rotate(-7deg) rotateX(54deg);
+    }
+
+    .thumbnail-main.is-scroll-down .orbit-stage {
+      transform: translate(-50%, -38%) rotate(-7deg) rotateX(60deg) scale(.96);
+    }
+
+    .thumbnail-main.is-scroll-up .orbit-stage {
+      transform: translate(-50%, -54%) rotate(-7deg) rotateX(48deg) scale(1.02);
+    }
+
+    .thumbnail-track {
+      --thumb-gap: 22px;
+
+      animation-duration: 36s;
+    }
+
+    .hero-copy {
+      top: calc(36% - 50px);
+      font-size: clamp(58px, 22vw, 128px);
+    }
+
+    .custom-cursor {
+      width: 22px;
+      height: 22px;
+    }
   }
 </style>
 </head>
 <body>
+  <span class="custom-cursor" aria-hidden="true"></span>
 
-<!-- LOADER -->
-<div class="loader-overlay" id="loaderOverlay">
-  <div class="loader-wrap">
-    <span class="loader-pct" id="loaderPct">0%</span>
-    <div class="loader-track">
-      <div class="loader-fill" id="loaderFill"></div>
-    </div>
-  </div>
-</div>
+  <main class="thumbnail-main page-section" aria-label="흐르는 썸네일 메인 화면">
+    <h1 class="hero-copy">interactive</h1>
 
-<!-- SERVICE PREVIEW -->
-<div class="service-preview" id="servicePreview">
-  <img id="servicePreviewImg" src="" alt="">
-</div>
+    <div class="orbit-stage">
+      <div class="thumbnail-track">
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-01/900/1125" alt="">
+          <div class="thumb-label"><span>Project 01</span><span>Brand</span></div>
+        </article>
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-02/900/1125" alt="">
+          <div class="thumb-label"><span>Project 02</span><span>UXUI</span></div>
+        </article>
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-03/900/1125" alt="">
+          <div class="thumb-label"><span>Project 03</span><span>Motion</span></div>
+        </article>
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-04/900/1125" alt="">
+          <div class="thumb-label"><span>Project 04</span><span>Commerce</span></div>
+        </article>
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-05/900/1125" alt="">
+          <div class="thumb-label"><span>Project 05</span><span>Platform</span></div>
+        </article>
+        <article class="thumb-card">
+          <img src="https://picsum.photos/seed/agency-thumb-06/900/1125" alt="">
+          <div class="thumb-label"><span>Project 06</span><span>Digital</span></div>
+        </article>
 
-<!-- PAGE CURTAIN -->
-<div class="page-curtain" id="pageCurtain"></div>
-
-<!-- NAV OVERLAY -->
-<div class="nav-overlay" id="navOverlay">
-  <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
-    <span></span><span></span>
-  </button>
-  <nav>
-    <a href="#">Work</a>
-    <a href="#">Services</a>
-    <a href="#">Process</a>
-    <a href="#">Contact</a>
-  </nav>
-  <div class="nav-footer">hello@axon.studio &nbsp;·&nbsp; Seoul, Korea</div>
-</div>
-
-<!-- HEADER -->
-<header>
-  <a class="logo" href="#">LOGO</a>
-  <button class="menu-btn" id="menuBtn" aria-label="메뉴 열기">
-    <span></span><span></span><span></span>
-  </button>
-</header>
-
-<!-- SECTIONS -->
-<div id="sections">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-text">
-      <h1>
-        <span class="word">We</span> <span class="word">are</span> <span class="word">creators</span><br>
-        <span class="word">for</span> <span class="word">movement</span>
-      </h1>
-    </div>
-
-    <div class="hero-strip-wrap" id="heroStripWrap">
-      <div class="hero-strip" id="heroStrip">
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/636bea3e-eea7-4aca-ab61-1537e23bf9ff" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/093e414f-59cc-4d3e-a8f0-923a97cc7c5d" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/f7078120-a5b6-4bed-812e-ac02fb8b90fd" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/9a88f11e-24a8-474e-9a93-7aa35be2dcbf" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/636bea3e-eea7-4aca-ab61-1537e23bf9ff" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/093e414f-59cc-4d3e-a8f0-923a97cc7c5d" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/f7078120-a5b6-4bed-812e-ac02fb8b90fd" alt=""></div>
-        <div class="strip-img"><img src="https://www.figma.com/api/mcp/asset/9a88f11e-24a8-474e-9a93-7aa35be2dcbf" alt=""></div>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-01/900/1125" alt="">
+          <div class="thumb-label"><span>Project 01</span><span>Brand</span></div>
+        </article>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-02/900/1125" alt="">
+          <div class="thumb-label"><span>Project 02</span><span>UXUI</span></div>
+        </article>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-03/900/1125" alt="">
+          <div class="thumb-label"><span>Project 03</span><span>Motion</span></div>
+        </article>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-04/900/1125" alt="">
+          <div class="thumb-label"><span>Project 04</span><span>Commerce</span></div>
+        </article>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-05/900/1125" alt="">
+          <div class="thumb-label"><span>Project 05</span><span>Platform</span></div>
+        </article>
+        <article class="thumb-card" aria-hidden="true">
+          <img src="https://picsum.photos/seed/agency-thumb-06/900/1125" alt="">
+          <div class="thumb-label"><span>Project 06</span><span>Digital</span></div>
+        </article>
       </div>
     </div>
+  </main>
 
-    <button class="ic-arrow" id="icArrow" aria-label="Work 보기">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <path d="M10 5l9 9-9 9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+  <section class="spline-section page-section" aria-label="Spline 인터랙션 섹션">
+    <hana-viewer url="https://prod.spline.design/AdT8751fFGUhKRZt-JkB/scene.hanacode"></hana-viewer>
   </section>
 
-  <!-- SECTION 2 -->
-  <section class="section2">
-    <div class="s2-heading">
-      <p class="s2-sub">아워스튜디오의 하는일 살펴보기</p>
-      <p class="s2-title">Our Studio</p>
-    </div>
-    <div class="s2-services">
-      <div class="s2-row">
-        <span>Website&amp;Platform Design</span>
-        <span>UIUX Design</span>
-      </div>
-      <div class="s2-row">
-        <span>Design System</span>
-        <span>Service Planning</span>
-        <span>Marketing</span>
-      </div>
-    </div>
-  </section>
+  <script>
+    const main = document.querySelector('.thumbnail-main');
+    const cards = document.querySelectorAll('.thumb-card');
+    const cursor = document.querySelector('.custom-cursor');
+    let cursorX = window.innerWidth / 2;
+    let cursorY = window.innerHeight / 2;
+    let scrollResetTimer;
+    let touchStartY = 0;
 
-</div>
-
-<script>
-  /* ── NAV ── */
-  const menuBtn   = document.getElementById('menuBtn');
-  const navOverlay = document.getElementById('navOverlay');
-  const navClose  = document.getElementById('navClose');
-
-  function toggleMenu(force) {
-    const open = force !== undefined ? force : !navOverlay.classList.contains('open');
-    navOverlay.classList.toggle('open', open);
-    menuBtn.classList.toggle('open', open);
-  }
-  menuBtn.addEventListener('click', () => toggleMenu());
-  navClose.addEventListener('click', () => toggleMenu(false));
-
-  /* ── STATE ── */
-  const sectionsEl = document.getElementById('sections');
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const stripImgs = Array.from(document.querySelectorAll('.strip-img')).slice(0, 4);
-  let currentSection = 0;
-  let isTransitioning = false;
-  let heroReady = false;
-
-  // section2 content hidden initially
-  gsap.set('.s2-sub, .s2-title, .s2-row span', { y: 55, opacity: 0 });
-
-  /* ── SECTION TRANSITIONS ── */
-  function goToSection2() {
-    if (!heroReady || isTransitioning || currentSection === 1) return;
-    isTransitioning = true;
-    toggleMenu(false);
-
-    gsap.timeline({
-      onComplete() { currentSection = 1; isTransitioning = false; }
-    })
-    // 이미지: 오른쪽에서 왼쪽 순으로 위로 날아가기
-    .to(stripImgs, {
-      y: -vh * 1.5,
-      duration: 0.7,
-      ease: 'power4.in',
-      stagger: { each: 0.09, from: 'end' }
-    }, 0)
-    .to('.hero-text', { y: -90, opacity: 0, duration: 0.5, ease: 'power3.in' }, 0.04)
-    .to('#icArrow',   { y: -55, opacity: 0, duration: 0.38, ease: 'power2.in' }, 0.08)
-    // 페이지 위로 슬라이드
-    .to(sectionsEl, { y: -vh, duration: 1.1, ease: 'expo.inOut' }, 0.1)
-    // section2 콘텐츠 캐스케이드
-    .to('.s2-sub',      { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.78)
-    .to('.s2-title',    { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.86)
-    .to('.s2-row span', { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out', stagger: 0.07 }, 0.96);
-  }
-
-  function goToHero() {
-    if (!heroReady || isTransitioning || currentSection === 0) return;
-    isTransitioning = true;
-
-    gsap.set('.s2-sub, .s2-title, .s2-row span', { y: 55, opacity: 0 });
-
-    gsap.timeline({
-      onComplete() { currentSection = 0; isTransitioning = false; }
-    })
-    // 페이지 내려오기
-    .to(sectionsEl, { y: 0, duration: 1.1, ease: 'expo.inOut' }, 0)
-    // 이미지: 왼쪽에서 오른쪽 순으로 위에서 떨어지기
-    .to(stripImgs, {
-      y: 0,
-      duration: 0.9,
-      ease: 'power4.out',
-      stagger: { each: 0.12, from: 'start' }
-    }, 0.55)
-    .to('.hero-text', { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out' }, 0.72)
-    .to('#icArrow',   { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.98);
-  }
-
-  // Wheel
-  window.addEventListener('wheel', (e) => {
-    if (!heroReady || isTransitioning) return;
-    if (e.deltaY > 0) goToSection2();
-    else              goToHero();
-  }, { passive: true });
-
-  // Touch
-  let touchY = 0;
-  window.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchend', (e) => {
-    if (!heroReady || isTransitioning) return;
-    const d = touchY - e.changedTouches[0].clientY;
-    if (Math.abs(d) < 50) return;
-    if (d > 0) goToSection2(); else goToHero();
-  }, { passive: true });
-
-  /* ── LOADING BAR → HERO ENTRANCE ── */
-  gsap.set(stripImgs, { y: -vh });
-  gsap.set('#heroStripWrap', { x: vw * 0.5 - 833 - 400 });
-  gsap.set('.hero-text', { x: -vw * 0.35, opacity: 0 });
-  gsap.set('#icArrow', { opacity: 0 });
-
-  const pctEl  = document.getElementById('loaderPct');
-  const counter = { val: 0 };
-
-  gsap.timeline({ onComplete() { heroReady = true; } })
-    .to(counter, {
-      val: 100, duration: 2, ease: 'none',
-      onUpdate() { pctEl.textContent = Math.round(counter.val) + '%'; }
-    }, 0)
-    .to('#loaderFill', { width: 400, duration: 2, ease: 'none' }, 0)
-    .to('#loaderOverlay', {
-      opacity: 0, duration: 0.5, ease: 'power2.out',
-      onComplete() { document.getElementById('loaderOverlay').style.display = 'none'; }
-    })
-    // 이미지 한 장씩 낙하
-    .to(stripImgs, { y: 0, duration: 0.72, ease: 'power4.out', stagger: 0.18 }, '-=0.1')
-    // 텍스트 밀고 들어오면서 이미지 우측 자리 이동
-    .to('.hero-text',    { x: 0, opacity: 1, duration: 0.95, ease: 'expo.out' }, '+=0.28')
-    .to('#heroStripWrap',{ x: 0, duration: 0.95, ease: 'expo.out' }, '<')
-    .to('#icArrow',      { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.4');
-
-  /* ── HERO STRIP HOVER SCROLL ── */
-  const heroStrip     = document.getElementById('heroStrip');
-  const heroStripWrap = document.getElementById('heroStripWrap');
-  const STRIP_W = 1600;
-  let   isLooping = false;
-
-  function loopScroll(startX) {
-    const dist = Math.abs(-STRIP_W - startX);
-    gsap.to(heroStrip, {
-      x: -STRIP_W,
-      duration: (dist / STRIP_W) * 12,
-      ease: 'none',
-      onComplete() {
-        if (!isLooping) return;
-        gsap.set(heroStrip, { x: 0 });
-        loopScroll(0);
-      }
+    cards.forEach((card, index) => {
+      card.style.setProperty('--card-index', index % 6);
     });
-  }
 
-  heroStripWrap.addEventListener('mouseenter', () => {
-    isLooping = true;
-    gsap.killTweensOf(heroStrip);
-    loopScroll(gsap.getProperty(heroStrip, 'x') || 0);
-  });
-  heroStripWrap.addEventListener('mouseleave', () => {
-    isLooping = false;
-    gsap.killTweensOf(heroStrip);
-    gsap.to(heroStrip, { x: 0, duration: 2.0, ease: 'expo.out' });
-  });
+    function moveCursor() {
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(moveCursor);
+    }
 
-  /* ── IC ARROW → work.html ── */
-  const pageCurtain = document.getElementById('pageCurtain');
-  const icArrow     = document.getElementById('icArrow');
-  let   isNavigating = false;
-
-  icArrow.addEventListener('click', () => {
-    if (isNavigating) return;
-    isNavigating = true;
-    gsap.timeline()
-      .to(pageCurtain, { scaleX: 1, duration: 0.72, ease: 'expo.inOut', transformOrigin: 'left center' })
-      .call(() => { window.location.href = 'work.html'; });
-  });
-
-  /* ── SERVICE PREVIEW ── */
-  const servicePreview    = document.getElementById('servicePreview');
-  const servicePreviewImg = document.getElementById('servicePreviewImg');
-  const serviceImages = [
-    { text: 'Website&Platform Design', src: 'https://picsum.photos/seed/s1/220/220' },
-    { text: 'UIUX Design',             src: 'https://picsum.photos/seed/s2/220/220' },
-    { text: 'Design System',           src: 'https://picsum.photos/seed/s3/220/220' },
-    { text: 'Service Planning',        src: 'https://picsum.photos/seed/s4/220/220' },
-    { text: 'Marketing',               src: 'https://picsum.photos/seed/s5/220/220' },
-  ];
-
-  gsap.set(servicePreview, { scale: 0.88, rotation: -2 });
-
-  document.querySelectorAll('.s2-row span').forEach(span => {
-    const match = serviceImages.find(s => s.text === span.textContent.trim());
-    span.addEventListener('mouseenter', () => {
-      if (match) servicePreviewImg.src = match.src;
-      gsap.to(servicePreview, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: 'expo.out' });
+    window.addEventListener('mousemove', (event) => {
+      cursorX = event.clientX;
+      cursorY = event.clientY;
     });
-    span.addEventListener('mouseleave', () => {
-      gsap.to(servicePreview, { opacity: 0, scale: 0.88, rotation: -2, duration: 0.3, ease: 'power2.in' });
-    });
-  });
 
-  document.addEventListener('mousemove', (e) => {
-    gsap.to(servicePreview, {
-      x: e.clientX, y: e.clientY,
-      duration: 0.6, ease: 'expo.out', overwrite: 'auto'
-    });
-  });
-</script>
+    function runScrollAnimation(direction) {
+      const activeClass = direction > 0 ? 'is-scroll-down' : 'is-scroll-up';
+      const inactiveClass = direction > 0 ? 'is-scroll-up' : 'is-scroll-down';
+
+      main.classList.remove(inactiveClass);
+      main.classList.add(activeClass);
+      window.clearTimeout(scrollResetTimer);
+      scrollResetTimer = window.setTimeout(() => {
+        main.classList.remove(activeClass);
+      }, 1180);
+    }
+
+    window.addEventListener('wheel', (event) => {
+      if (Math.abs(event.deltaY) < 4) return;
+
+      runScrollAnimation(event.deltaY);
+    }, { passive: true });
+
+    window.addEventListener('touchstart', (event) => {
+      touchStartY = event.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (event) => {
+      const touchEndY = event.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+
+      if (Math.abs(deltaY) < 24) return;
+      runScrollAnimation(deltaY);
+    }, { passive: true });
+
+    moveCursor();
+  </script>
 </body>
 </html>
