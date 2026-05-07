@@ -153,6 +153,74 @@
     pointer-events: none;
   }
 
+  .section-indicator {
+    position: fixed;
+    right: 50px;
+    top: 50%;
+    z-index: 8500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 44px;
+    padding: 34px 0;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-right-color: rgba(255, 255, 255, .2);
+    border-radius: 999px;
+    background: rgba(17, 17, 17, .74);
+    box-shadow:
+      inset -1px 0 0 rgba(255, 255, 255, .08),
+      0 24px 52px rgba(0, 0, 0, .42);
+    backdrop-filter: blur(14px);
+    transform: translateY(-50%);
+  }
+
+  .section-indicator button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: none;
+    appearance: none;
+  }
+
+  .section-indicator button::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(130, 130, 130, .78);
+    box-shadow: 0 0 14px rgba(255, 255, 255, .08);
+    transition:
+      background-color .24s ease,
+      box-shadow .24s ease,
+      transform .24s ease;
+  }
+
+  .section-indicator button:hover::before,
+  .section-indicator button:focus-visible::before {
+    background: rgba(210, 210, 210, .92);
+    transform: scale(1.08);
+  }
+
+  .section-indicator button:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, .5);
+    outline-offset: 5px;
+  }
+
+  .section-indicator button.is-active::before {
+    background: #fff;
+    box-shadow:
+      0 0 0 6px rgba(255, 255, 255, .08),
+      0 0 18px rgba(255, 255, 255, .88);
+    transform: scale(1.08);
+  }
+
   .thumbnail-main {
     position: relative;
     display: flex;
@@ -211,6 +279,86 @@
     height: 100vh;
     background: #fff;
     color: #000;
+  }
+
+  .client-cases-section {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(300px, 34vw) minmax(0, 1fr);
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background: #f7f6f2;
+    color: #0a0a0a;
+    scroll-snap-align: start;
+  }
+
+  .client-cases-title {
+    margin: 0;
+    padding-left: clamp(48px, 6vw, 100px);
+    color: #0a0a0a;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 70px;
+    font-weight: 300;
+    line-height: 1.18;
+    letter-spacing: 0;
+  }
+
+  .client-cases-viewport {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .client-cases-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    width: max-content;
+    padding-right: max(50px, 6vw);
+    transform: translate3d(var(--client-x, 0px), 0, 0);
+    transition: transform .9s cubic-bezier(.16, 1, .3, 1);
+    will-change: transform;
+  }
+
+  .client-card {
+    flex: 0 0 min(38.666vw, 683px);
+  }
+
+  .client-thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #050505;
+  }
+
+  .client-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(.9) contrast(1.04);
+  }
+
+  .client-card-eyebrow {
+    margin: 24px 0 12px;
+    color: #0a0a0a;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  .client-card-title {
+    margin: 0;
+    color: #0a0a0a;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: 0;
   }
 
   .outcome-sticky {
@@ -682,7 +830,7 @@
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 20;
+    z-index: 9000;
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -750,6 +898,31 @@
       font-size: 32px;
     }
 
+    .client-cases-section {
+      grid-template-columns: 1fr;
+      align-content: center;
+      gap: 42px;
+      padding: 88px 0 54px;
+    }
+
+    .client-cases-title {
+      padding-left: 24px;
+      font-size: 32px;
+    }
+
+    .client-cases-viewport {
+      padding-left: 24px;
+    }
+
+    .client-cases-track {
+      gap: 24px;
+      padding-right: 24px;
+    }
+
+    .client-card {
+      flex-basis: min(55vw, 347px);
+    }
+
     .outcome-copy {
       font-size: 32px;
     }
@@ -763,6 +936,11 @@
     }
 
     .outcome-section {
+      height: 100svh;
+      min-height: 560px;
+    }
+
+    .client-cases-section {
       height: 100svh;
       min-height: 560px;
     }
@@ -810,6 +988,20 @@
       max-width: 100%;
       font-size: clamp(34px, 10.8vw, 58px);
       line-height: 1.12;
+    }
+
+    .client-cases-title {
+      font-size: clamp(34px, 10.8vw, 58px);
+      line-height: 1.12;
+    }
+
+    .client-card-eyebrow {
+      margin-top: 18px;
+      font-size: 15px;
+    }
+
+    .client-card-title {
+      font-size: 22px;
     }
 
     .outcome-copy {
@@ -899,6 +1091,7 @@
     <span class="intro-percent">1%</span>
   </div>
   <span class="custom-cursor" aria-hidden="true"></span>
+  <nav class="section-indicator" aria-label="섹션 바로가기"></nav>
 
   <main class="thumbnail-main page-section" aria-label="흐르는 썸네일 메인 화면">
     <span class="section-number">01</span>
@@ -970,9 +1163,60 @@
     <div class="hana-badge-cover" aria-hidden="true"></div>
   </section>
 
+  <section class="client-cases-section page-section" aria-label="클라이언트 사례">
+    <span class="section-number">04</span>
+    <h2 class="client-cases-title">Client<br>Cases</h2>
+    <div class="client-cases-viewport">
+      <div class="client-cases-track">
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-01/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">브랜드 사이트</p>
+          <h3 class="client-card-title">클래스팅 AIDT</h3>
+        </article>
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-02/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">랜딩 페이지</p>
+          <h3 class="client-card-title">제로베이스 캠페인</h3>
+        </article>
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-03/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">프로덕트 MVP</p>
+          <h3 class="client-card-title">루프 커머스</h3>
+        </article>
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-04/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">기업 홈페이지</p>
+          <h3 class="client-card-title">노바랩스</h3>
+        </article>
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-05/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">콘텐츠 허브</p>
+          <h3 class="client-card-title">모먼트 저널</h3>
+        </article>
+        <article class="client-card">
+          <div class="client-thumb">
+            <img src="https://picsum.photos/seed/client-case-06/1440/810" alt="">
+          </div>
+          <p class="client-card-eyebrow">브랜드 리뉴얼</p>
+          <h3 class="client-card-title">스튜디오 에코</h3>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="outcome-section page-section" aria-label="성과 메시지">
     <div class="outcome-sticky">
-      <span class="section-number">04</span>
+      <span class="section-number">05</span>
       <p class="outcome-copy">Evolving Experiences,<br>Empowering Outcomes.</p>
       <div class="outcome-visual">
         <div class="outcome-visual-inner">
@@ -1045,12 +1289,20 @@
     const main = document.querySelector('.thumbnail-main');
     const cards = document.querySelectorAll('.thumb-card');
     const cursor = document.querySelector('.custom-cursor');
+    const sectionIndicator = document.querySelector('.section-indicator');
+    const sectionNodes = Array.from(document.querySelectorAll(
+      '.thumbnail-main, .values-copy-section, .spline-section, .client-cases-section, .outcome-section, .placeholder-section, .contact-section'
+    ));
+    const clientCasesSection = document.querySelector('.client-cases-section');
+    const clientCasesTrack = document.querySelector('.client-cases-track');
     const outcomeSection = document.querySelector('.outcome-section');
     const outcomeVisual = document.querySelector('.outcome-visual');
     const outcomeCopy = document.querySelector('.outcome-copy');
     const outcomeOrb = document.querySelector('.outcome-orb');
     const nextSection = document.querySelector('.placeholder-section');
-    const previousSection = document.querySelector('.spline-section');
+    const previousSection = document.querySelector('.client-cases-section');
+    const clientPreviousSection = document.querySelector('.spline-section');
+    const clientNextSection = document.querySelector('.outcome-section');
     const serviceItems = document.querySelectorAll('.service-item.is-hoverable');
     const contactLottie = document.querySelector('#contact-lottie');
     const introLoader = document.querySelector('.intro-loader');
@@ -1062,7 +1314,24 @@
     let outcomeStage = 0;
     let outcomeScrollLocked = false;
     let outcomeBoundaryLock = false;
+    let outcomeLastWheelAt = 0;
+    let outcomeLastWheelDirection = 0;
+    let outcomeLastStageDirection = 0;
     let touchStartY = 0;
+    let touchStartTarget = null;
+    let clientProgress = 0;
+    let clientScrollLocked = false;
+    let clientEntryLocked = false;
+    let clientBoundaryLock = false;
+    let clientWasPinned = false;
+    let clientLastWheelAt = 0;
+    let clientLastWheelDirection = 0;
+    let activeSectionIndex = -1;
+    let indicatorTicking = false;
+    const outcomeMomentumIdleMs = 180;
+    const clientMomentumIdleMs = 180;
+    const clientEdgeThreshold = .96;
+    const clientExitWheelThreshold = 18;
 
     cards.forEach((card, index) => {
       card.style.setProperty('--card-index', index % 6);
@@ -1107,7 +1376,7 @@
       if (!cursor) return;
 
       const hoveredElement = document.elementFromPoint(cursorX, cursorY);
-      const isLightSection = hoveredElement?.closest('.outcome-section, .contact-section');
+      const isLightSection = hoveredElement?.closest('.client-cases-section, .outcome-section, .contact-section');
       cursor.classList.toggle('is-dark', Boolean(isLightSection));
     }
 
@@ -1134,6 +1403,68 @@
       });
     }
 
+    function setActiveSection(index) {
+      if (!sectionIndicator || index === activeSectionIndex) return;
+
+      activeSectionIndex = index;
+      Array.from(sectionIndicator.children).forEach((button, buttonIndex) => {
+        const isActive = buttonIndex === index;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-current', isActive ? 'true' : 'false');
+      });
+    }
+
+    function updateSectionIndicator() {
+      indicatorTicking = false;
+      if (!sectionNodes.length) return;
+
+      const viewportCenter = window.innerHeight / 2;
+      let nearestIndex = 0;
+      let nearestDistance = Infinity;
+
+      sectionNodes.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height / 2;
+        const containsViewportCenter = rect.top <= viewportCenter && rect.bottom >= viewportCenter;
+        const distance = containsViewportCenter ? 0 : Math.abs(sectionCenter - viewportCenter);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+
+      setActiveSection(nearestIndex);
+    }
+
+    function requestSectionIndicatorUpdate() {
+      if (indicatorTicking) return;
+
+      indicatorTicking = true;
+      requestAnimationFrame(updateSectionIndicator);
+    }
+
+    function buildSectionIndicator() {
+      if (!sectionIndicator) return;
+
+      sectionNodes.forEach((section, index) => {
+        const button = document.createElement('button');
+        const label = section.getAttribute('aria-label') || `Section ${index + 1}`;
+
+        button.type = 'button';
+        button.setAttribute('aria-label', `${index + 1}번 섹션으로 이동: ${label}`);
+        button.addEventListener('click', () => {
+          outcomeScrollLocked = false;
+          outcomeBoundaryLock = false;
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setActiveSection(index);
+        });
+        sectionIndicator.appendChild(button);
+      });
+
+      updateSectionIndicator();
+    }
+
     function runScrollAnimation(direction) {
       const activeClass = direction > 0 ? 'is-scroll-down' : 'is-scroll-up';
       const inactiveClass = direction > 0 ? 'is-scroll-up' : 'is-scroll-down';
@@ -1144,6 +1475,189 @@
       scrollResetTimer = window.setTimeout(() => {
         main.classList.remove(activeClass);
       }, 1180);
+    }
+
+    function clamp(value, min = 0, max = 1) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function getClientMaxX() {
+      if (!clientCasesSection || !clientCasesTrack) return 0;
+
+      const viewport = clientCasesSection.querySelector('.client-cases-viewport');
+      if (!viewport) return 0;
+
+      return Math.max(0, clientCasesTrack.scrollWidth - viewport.clientWidth + 50);
+    }
+
+    function updateClientCases(progress = clientProgress) {
+      if (!clientCasesTrack) return;
+
+      clientProgress = clamp(progress);
+      clientCasesTrack.style.setProperty('--client-x', `${getClientMaxX() * -clientProgress}px`);
+    }
+
+    function isClientCasesPinned() {
+      if (!clientCasesSection) return false;
+
+      const rect = clientCasesSection.getBoundingClientRect();
+      return Math.abs(rect.top) <= 2 && rect.bottom >= window.innerHeight * .9;
+    }
+
+    function isClientCasesApproaching(direction) {
+      if (!clientCasesSection) return false;
+
+      const rect = clientCasesSection.getBoundingClientRect();
+      if (direction > 0) {
+        return rect.top > 2 && rect.top < window.innerHeight * 1.1;
+      }
+
+      return rect.bottom < window.innerHeight - 2 && rect.bottom > window.innerHeight * -.1;
+    }
+
+    function lockClientBoundary() {
+      clientBoundaryLock = true;
+      window.setTimeout(() => {
+        clientBoundaryLock = false;
+      }, 520);
+    }
+
+    function releaseClientScroll(target) {
+      if (!target || clientScrollLocked) return;
+
+      clientScrollLocked = true;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => {
+        clientScrollLocked = false;
+      }, 850);
+    }
+
+    function isClientImageAreaTarget(target) {
+      return Boolean(target?.closest?.('.client-cases-viewport'));
+    }
+
+    function lockClientEntryBriefly() {
+      if (!clientCasesSection || clientEntryLocked) return;
+
+      const rect = clientCasesSection.getBoundingClientRect();
+      const isPinned = Math.abs(rect.top) <= 2 && rect.bottom >= window.innerHeight * .9;
+      if (!isPinned) {
+        clientWasPinned = false;
+        return;
+      }
+
+      if (clientWasPinned) return;
+
+      clientWasPinned = true;
+      clientEntryLocked = true;
+      window.setTimeout(() => {
+        clientEntryLocked = false;
+      }, 220);
+    }
+
+    function handleClientCasesWheel(event) {
+      const direction = Math.sign(event.deltaY);
+      const now = performance.now();
+      const isSameWheelGesture =
+        direction === clientLastWheelDirection &&
+        now - clientLastWheelAt < clientMomentumIdleMs;
+      if (!direction) return;
+
+      if (!isClientCasesPinned() && isClientCasesApproaching(direction)) {
+        event.preventDefault();
+        clientScrollLocked = true;
+        clientCasesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(() => {
+          clientScrollLocked = false;
+          lockClientEntryBriefly();
+        }, 850);
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      if (!isClientCasesPinned()) return;
+
+      event.preventDefault();
+
+      if (clientScrollLocked || clientEntryLocked || clientBoundaryLock) {
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      if (!isClientImageAreaTarget(event.target)) {
+        releaseClientScroll(direction > 0 ? clientNextSection : clientPreviousSection);
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      const atStart = clientProgress <= 1 - clientEdgeThreshold;
+      const atEnd = clientProgress >= clientEdgeThreshold;
+
+      if (direction > 0 && atEnd) {
+        if (clientProgress < 0.999) {
+          updateClientCases(1);
+          lockClientBoundary();
+          clientLastWheelAt = now;
+          clientLastWheelDirection = direction;
+          return;
+        }
+
+        updateClientCases(1);
+        if (Math.abs(event.deltaY) < clientExitWheelThreshold) {
+          clientLastWheelAt = now;
+          clientLastWheelDirection = direction;
+          return;
+        }
+
+        releaseClientScroll(clientNextSection);
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      if (direction < 0 && atStart) {
+        if (clientProgress > 0.001) {
+          updateClientCases(0);
+          lockClientBoundary();
+          clientLastWheelAt = now;
+          clientLastWheelDirection = direction;
+          return;
+        }
+
+        updateClientCases(0);
+        if (isSameWheelGesture) {
+          lockClientBoundary();
+        } else {
+          releaseClientScroll(clientPreviousSection);
+        }
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      const nextProgress = clientProgress + (event.deltaY / 2200);
+      if (direction > 0 && nextProgress >= clientEdgeThreshold) {
+        updateClientCases(1);
+        lockClientBoundary();
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      if (direction < 0 && nextProgress <= 1 - clientEdgeThreshold) {
+        updateClientCases(0);
+        releaseClientScroll(clientPreviousSection);
+        clientLastWheelAt = now;
+        clientLastWheelDirection = direction;
+        return;
+      }
+
+      updateClientCases(nextProgress);
+      clientLastWheelAt = now;
+      clientLastWheelDirection = direction;
     }
 
     function updateOutcomeProgress(progress = outcomeProgress) {
@@ -1168,7 +1682,9 @@
     }
 
     function setOutcomeStage(stage) {
-      outcomeStage = Math.min(1, Math.max(0, stage));
+      const nextStage = Math.min(1, Math.max(0, stage));
+      outcomeLastStageDirection = Math.sign(nextStage - outcomeStage);
+      outcomeStage = nextStage;
       const stageProgress = [0, 1][outcomeStage];
 
       outcomeBoundaryLock = true;
@@ -1209,11 +1725,17 @@
     function handleOutcomeWheel(event) {
       const delta = event.deltaY;
       const direction = Math.sign(delta);
+      const now = performance.now();
+      const isSameWheelGesture =
+        direction === outcomeLastWheelDirection &&
+        now - outcomeLastWheelAt < outcomeMomentumIdleMs;
 
       if (!direction) return;
 
       if (outcomeScrollLocked) {
         event.preventDefault();
+        outcomeLastWheelAt = now;
+        outcomeLastWheelDirection = direction;
         return;
       }
 
@@ -1221,6 +1743,7 @@
         event.preventDefault();
         outcomeScrollLocked = true;
         outcomeStage = direction > 0 ? 0 : 1;
+        outcomeLastStageDirection = 0;
         updateOutcomeProgress(outcomeStage === 0 ? 0 : 1);
         outcomeSection.scrollIntoView({ behavior: 'smooth' });
         window.setTimeout(() => {
@@ -1230,33 +1753,53 @@
             outcomeBoundaryLock = false;
           }, 260);
         }, 850);
+        outcomeLastWheelAt = now;
+        outcomeLastWheelDirection = direction;
         return;
       }
 
       if (!isOutcomePinned()) return;
 
-      const atStart = outcomeProgress <= 0.001;
-      const atEnd = outcomeProgress >= 0.999;
-
       if (outcomeBoundaryLock) {
         event.preventDefault();
+        if (outcomeLastStageDirection !== 0 && direction !== outcomeLastStageDirection) {
+          setOutcomeStage(outcomeStage + direction);
+        }
+        outcomeLastWheelAt = now;
+        outcomeLastWheelDirection = direction;
         return;
       }
 
       if (direction > 0 && outcomeStage >= 1) {
         event.preventDefault();
+        if (isSameWheelGesture) {
+          outcomeLastWheelAt = now;
+          outcomeLastWheelDirection = direction;
+          return;
+        }
         releaseOutcomeScroll(nextSection);
+        outcomeLastWheelAt = now;
+        outcomeLastWheelDirection = direction;
         return;
       }
 
       if (direction < 0 && outcomeStage <= 0) {
         event.preventDefault();
+        if (isSameWheelGesture) {
+          outcomeLastWheelAt = now;
+          outcomeLastWheelDirection = direction;
+          return;
+        }
         releaseOutcomeScroll(previousSection);
+        outcomeLastWheelAt = now;
+        outcomeLastWheelDirection = direction;
         return;
       }
 
       event.preventDefault();
       setOutcomeStage(outcomeStage + direction);
+      outcomeLastWheelAt = now;
+      outcomeLastWheelDirection = direction;
     }
 
     window.addEventListener('wheel', (event) => {
@@ -1265,11 +1808,19 @@
       runScrollAnimation(event.deltaY);
     }, { passive: true });
 
+    window.addEventListener('wheel', handleClientCasesWheel, { passive: false });
     window.addEventListener('wheel', handleOutcomeWheel, { passive: false });
-    window.addEventListener('resize', () => updateOutcomeProgress());
+    window.addEventListener('scroll', requestSectionIndicatorUpdate, { passive: true });
+    window.addEventListener('scroll', lockClientEntryBriefly, { passive: true });
+    window.addEventListener('resize', () => {
+      updateClientCases();
+      updateOutcomeProgress();
+      requestSectionIndicatorUpdate();
+    });
 
     window.addEventListener('touchstart', (event) => {
       touchStartY = event.touches[0].clientY;
+      touchStartTarget = event.target;
     }, { passive: true });
 
     window.addEventListener('touchend', (event) => {
@@ -1277,10 +1828,68 @@
       const deltaY = touchStartY - touchEndY;
 
       if (Math.abs(deltaY) < 24) return;
-      if (isOutcomePinned()) {
-        if (outcomeBoundaryLock) return;
-
+      if (isClientCasesPinned()) {
         const touchDirection = deltaY > 0 ? 1 : -1;
+
+        if (clientScrollLocked || clientEntryLocked || clientBoundaryLock) return;
+
+        if (!isClientImageAreaTarget(touchStartTarget)) {
+          releaseClientScroll(touchDirection > 0 ? clientNextSection : clientPreviousSection);
+          return;
+        }
+
+        if (touchDirection > 0 && clientProgress >= clientEdgeThreshold) {
+          if (clientProgress < 0.999) {
+            updateClientCases(1);
+            lockClientBoundary();
+            return;
+          }
+
+          updateClientCases(1);
+          if (Math.abs(deltaY) < 72) return;
+
+          releaseClientScroll(clientNextSection);
+          return;
+        }
+
+        if (touchDirection < 0 && clientProgress <= 1 - clientEdgeThreshold) {
+          if (clientProgress > 0.001) {
+            updateClientCases(0);
+            lockClientBoundary();
+            return;
+          }
+
+          updateClientCases(0);
+          releaseClientScroll(clientPreviousSection);
+          return;
+        }
+
+        const nextClientProgress = clientProgress + (deltaY / 1600);
+        if (touchDirection > 0 && nextClientProgress >= clientEdgeThreshold) {
+          updateClientCases(1);
+          lockClientBoundary();
+          return;
+        }
+
+        if (touchDirection < 0 && nextClientProgress <= 1 - clientEdgeThreshold) {
+          updateClientCases(0);
+          releaseClientScroll(clientPreviousSection);
+          return;
+        }
+
+        updateClientCases(nextClientProgress);
+        return;
+      }
+
+      if (isOutcomePinned()) {
+        const touchDirection = deltaY > 0 ? 1 : -1;
+
+        if (outcomeBoundaryLock) {
+          if (outcomeLastStageDirection !== 0 && touchDirection !== outcomeLastStageDirection) {
+            setOutcomeStage(outcomeStage + touchDirection);
+          }
+          return;
+        }
 
         if (touchDirection > 0 && outcomeStage >= 1) {
           releaseOutcomeScroll(nextSection);
@@ -1300,6 +1909,8 @@
     }, { passive: true });
 
     moveCursor();
+    buildSectionIndicator();
+    updateClientCases();
     updateOutcomeProgress();
     runIntroLoader();
   </script>
