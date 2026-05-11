@@ -153,86 +153,21 @@
     pointer-events: none;
   }
 
-  .section-indicator {
-    position: fixed;
-    right: 50px;
-    top: 50%;
-    z-index: 8500;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    width: 44px;
-    padding: 34px 0;
-    border: 1px solid rgba(255, 255, 255, .1);
-    border-right-color: rgba(255, 255, 255, .2);
-    border-radius: 999px;
-    background: rgba(17, 17, 17, .74);
-    box-shadow:
-      inset -1px 0 0 rgba(255, 255, 255, .08),
-      0 24px 52px rgba(0, 0, 0, .42);
-    backdrop-filter: blur(14px);
-    transform: translateY(-50%);
-  }
-
-  .section-indicator button {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: inherit;
-    cursor: none;
-    appearance: none;
-  }
-
-  .section-indicator button::before {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(130, 130, 130, .78);
-    box-shadow: 0 0 14px rgba(255, 255, 255, .08);
-    transition:
-      background-color .24s ease,
-      box-shadow .24s ease,
-      transform .24s ease;
-  }
-
-  .section-indicator button:hover::before,
-  .section-indicator button:focus-visible::before {
-    background: rgba(210, 210, 210, .92);
-    transform: scale(1.08);
-  }
-
-  .section-indicator button:focus-visible {
-    outline: 1px solid rgba(255, 255, 255, .5);
-    outline-offset: 5px;
-  }
-
-  .section-indicator button.is-active::before {
-    background: #fff;
-    box-shadow:
-      0 0 0 6px rgba(255, 255, 255, .08),
-      0 0 18px rgba(255, 255, 255, .88);
-    transform: scale(1.08);
-  }
-
   .thumbnail-main {
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    perspective: 1200px;
-    perspective-origin: 50% 35%;
-    background:
-      radial-gradient(circle at 18% 74%, rgba(20, 72, 255, .2), transparent 18%),
-      linear-gradient(180deg, #000 0%, #030303 100%);
+    height: auto;
+    min-height: 0;
+    padding: clamp(88px, 9vw, 150px) 150px;
+    overflow: auto;
+    background: #000;
+    scrollbar-width: none;
+  }
+
+  .thumbnail-main::-webkit-scrollbar {
+    display: none;
   }
 
   .spline-section {
@@ -288,7 +223,7 @@
     align-items: center;
     height: 100vh;
     overflow: hidden;
-    background: #f7f6f2;
+    background: #fff;
     color: #0a0a0a;
     scroll-snap-align: start;
   }
@@ -298,8 +233,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    background:
-      radial-gradient(circle at 62% 44%, rgba(255, 255, 255, .92), rgba(247, 246, 242, .04) 42%, transparent 66%);
+    background: transparent;
     opacity: 0;
     transform: scale(.96);
     transition:
@@ -488,6 +422,7 @@
     padding: 48px 46px 28px;
     background: #000;
     color: #fff;
+    scroll-snap-align: none;
   }
 
   .service-title {
@@ -712,7 +647,7 @@
 
   .thumbnail-main::before,
   .thumbnail-main::after {
-    content: "";
+    content: none;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -732,47 +667,39 @@
   }
 
   .orbit-stage {
-    position: absolute;
-    left: 50%;
-    top: 50%;
+    position: relative;
     width: max-content;
-    transform: translate(-50%, -46%) rotate(-9deg) rotateX(58deg);
-    transform-origin: center;
-    transform-style: preserve-3d;
-    transition: transform 1.05s cubic-bezier(.16, 1, .3, 1);
   }
 
   .thumbnail-track {
-    --thumb-gap: 28px;
+    --thumb-size: 400px;
+    --thumb-column-gap: clamp(36px, 4.2vw, 86px);
+    --thumb-row-gap: clamp(26px, 3.4vw, 52px);
 
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(8, var(--thumb-size));
     align-items: center;
-    gap: var(--thumb-gap);
+    gap: var(--thumb-row-gap) var(--thumb-column-gap);
     width: max-content;
-    animation: thumbnail-flow 42s linear infinite;
-    transform-style: preserve-3d;
-    will-change: transform;
   }
 
   .thumb-card {
     position: relative;
-    width: 400px;
-    height: 500px;
-    flex: 0 0 auto;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 30px;
-    background: #111;
-    box-shadow:
-      0 26px 42px rgba(0, 0, 0, .5),
-      0 74px 120px rgba(0, 0, 0, .68);
+    border: 0;
+    border-radius: 0;
+    background: #f4f1ea;
+    box-shadow: none;
     transform: translateZ(0);
-    transition:
-      opacity .9s cubic-bezier(.16, 1, .3, 1),
-      filter .9s cubic-bezier(.16, 1, .3, 1),
-      transform 1s cubic-bezier(.16, 1, .3, 1);
-    transition-delay: calc(var(--card-index, 0) * 58ms);
+    transition: transform .34s cubic-bezier(.16, 1, .3, 1);
     backface-visibility: hidden;
+  }
+
+  .thumb-card:hover {
+    z-index: 5;
+    transform: translateZ(0) scale(1.05);
   }
 
   .thumb-card img {
@@ -780,12 +707,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(.9) contrast(1.08) brightness(.82);
-    transform: scale(1.04);
+    filter: saturate(.86) contrast(1.02);
   }
 
   .thumb-card::after {
-    content: "";
+    content: none;
     position: absolute;
     inset: 0;
     background:
@@ -799,34 +725,15 @@
   }
 
   .hero-copy {
-    position: absolute;
-    left: 50%;
-    top: calc(38% - 50px);
-    z-index: 6;
-    color: #fff;
-    font-family: "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-size: clamp(72px, 15vw, 260px);
-    font-weight: 500;
-    line-height: .82;
-    letter-spacing: 0;
-    text-transform: capitalize;
-    text-align: center;
-    white-space: nowrap;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    text-shadow: 0 0 18px rgba(255, 255, 255, .16);
-    transition:
-      opacity .95s cubic-bezier(.16, 1, .3, 1),
-      filter .95s cubic-bezier(.16, 1, .3, 1),
-      transform 1.05s cubic-bezier(.16, 1, .3, 1);
+    display: none;
   }
 
   .thumbnail-main.is-scroll-down .orbit-stage {
-    transform: translate(-50%, -36%) rotate(-9deg) rotateX(64deg) scale(.94);
+    transform: none;
   }
 
   .thumbnail-main.is-scroll-up .orbit-stage {
-    transform: translate(-50%, -56%) rotate(-9deg) rotateX(52deg) scale(1.03);
+    transform: none;
   }
 
   .thumbnail-main.is-scroll-down .hero-copy {
@@ -842,15 +749,80 @@
   }
 
   .thumbnail-main.is-scroll-down .thumb-card {
-    opacity: .72;
-    filter: brightness(.66) blur(.8px);
-    transform: translateY(90px) translateZ(-36px) scale(.96);
+    opacity: 1;
+    filter: none;
+    transform: translateZ(0);
   }
 
   .thumbnail-main.is-scroll-up .thumb-card {
-    opacity: .84;
-    filter: brightness(.78) blur(.4px);
-    transform: translateY(-74px) translateZ(24px) scale(1.02);
+    opacity: 1;
+    filter: none;
+    transform: translateZ(0);
+  }
+
+  .thumb-card.is-style {
+    background:
+      linear-gradient(90deg, rgba(20, 20, 20, .2) 0 8%, transparent 8% 92%, rgba(20, 20, 20, .2) 92%),
+      #fff;
+  }
+
+  .thumb-card.is-style::before {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    background:
+      radial-gradient(circle at 22% 18%, #3d514d 0 9%, transparent 10%),
+      radial-gradient(circle at 67% 17%, #111827 0 8%, transparent 9%),
+      radial-gradient(circle at 39% 39%, #f0f0f0 0 10%, transparent 11%),
+      radial-gradient(circle at 68% 42%, #203544 0 9%, transparent 10%),
+      radial-gradient(circle at 30% 67%, #243c5a 0 10%, transparent 11%),
+      radial-gradient(circle at 67% 70%, #dedede 0 3%, transparent 4%),
+      radial-gradient(circle at 42% 88%, #0f172a 0 9%, transparent 10%),
+      radial-gradient(circle at 77% 88%, #7a8179 0 8%, transparent 9%);
+  }
+
+  .thumb-card.is-shop {
+    background:
+      linear-gradient(90deg, transparent 0 25%, rgba(255, 255, 255, .96) 25% 75%, transparent 75%),
+      linear-gradient(180deg, #e8e0d3 0%, #f8f5ef 48%, #b98758 100%);
+  }
+
+  .thumb-card.is-shop::before {
+    content: "";
+    position: absolute;
+    left: 25%;
+    top: 15%;
+    width: 50%;
+    height: 70%;
+    background:
+      linear-gradient(90deg, transparent 0 49%, #111 49% 51%, transparent 51%),
+      repeating-linear-gradient(0deg, transparent 0 42px, rgba(0, 0, 0, .08) 42px 43px),
+      radial-gradient(circle at 25% 12%, #f5a5a5 0 7%, transparent 8%),
+      radial-gradient(circle at 72% 12%, #ed5b32 0 8%, transparent 9%),
+      radial-gradient(circle at 25% 31%, #d9edf0 0 7%, transparent 8%),
+      radial-gradient(circle at 73% 31%, #8767a9 0 8%, transparent 9%),
+      radial-gradient(circle at 26% 51%, #81c14b 0 8%, transparent 9%),
+      radial-gradient(circle at 72% 51%, #f77872 0 7%, transparent 8%),
+      radial-gradient(circle at 25% 70%, #214232 0 8%, transparent 9%),
+      radial-gradient(circle at 73% 70%, #0078a8 0 8%, transparent 9%),
+      #fff;
+  }
+
+  .thumb-card.is-orange {
+    background: #ff4b0b;
+  }
+
+  .thumb-card.is-orange::before {
+    content: "";
+    position: absolute;
+    left: 15%;
+    top: 10%;
+    width: 72%;
+    height: 80%;
+    background:
+      linear-gradient(#151515 0 7%, transparent 7%),
+      linear-gradient(180deg, #fff 0 100%);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .08);
   }
 
   .custom-cursor {
@@ -876,38 +848,23 @@
     box-shadow: 0 0 24px rgba(0, 0, 0, .26);
   }
 
-  @keyframes thumbnail-flow {
-    from {
-      transform: translateX(0);
-    }
-
-    to {
-      transform: translateX(calc(-50% - (var(--thumb-gap) / 2)));
-    }
-  }
-
   @media (max-width: 760px) {
-    .orbit-stage {
-      transform: translate(-50%, -46%) rotate(-7deg) rotateX(54deg);
-    }
-
     .thumbnail-main.is-scroll-down .orbit-stage {
-      transform: translate(-50%, -38%) rotate(-7deg) rotateX(60deg) scale(.96);
+      transform: none;
     }
 
     .thumbnail-main.is-scroll-up .orbit-stage {
-      transform: translate(-50%, -54%) rotate(-7deg) rotateX(48deg) scale(1.02);
+      transform: none;
     }
 
     .thumbnail-track {
-      --thumb-gap: 22px;
-
-      animation-duration: 36s;
+      --thumb-size: min(400px, calc(100vw - 48px));
+      --thumb-column-gap: 28px;
+      --thumb-row-gap: 24px;
     }
 
     .hero-copy {
-      top: calc(36% - 50px);
-      font-size: clamp(58px, 22vw, 128px);
+      display: none;
     }
 
     .custom-cursor {
@@ -956,10 +913,15 @@
   }
 
   @media (max-width: 640px) {
-    .thumbnail-main,
     .spline-section {
       height: 100svh;
       min-height: 560px;
+    }
+
+    .thumbnail-main {
+      height: auto;
+      min-height: 0;
+      padding: 72px 24px;
     }
 
     .outcome-section {
@@ -978,23 +940,21 @@
     }
 
     .orbit-stage {
-      top: 52%;
-      transform: translate(-50%, -46%) rotate(-7deg) rotateX(52deg);
+      transform: none;
     }
 
     .thumbnail-track {
-      --thumb-gap: clamp(14px, 4vw, 22px);
+      --thumb-size: min(400px, calc(100vw - 48px));
+      --thumb-column-gap: 22px;
+      --thumb-row-gap: 20px;
     }
 
     .thumb-card {
-      width: clamp(210px, 62vw, 320px);
-      height: calc(clamp(210px, 62vw, 320px) * 1.25);
-      border-radius: 22px;
+      border-radius: 0;
     }
 
     .hero-copy {
-      top: calc(34% - 24px);
-      font-size: clamp(54px, 21vw, 116px);
+      display: none;
     }
 
     .thumbnail-main.is-scroll-down .hero-copy {
@@ -1118,63 +1078,45 @@
     <span class="intro-percent">1%</span>
   </div>
   <span class="custom-cursor" aria-hidden="true"></span>
-  <nav class="section-indicator" aria-label="섹션 바로가기"></nav>
 
   <main class="thumbnail-main page-section" aria-label="흐르는 썸네일 메인 화면">
-    <span class="section-number">01</span>
-    <h1 class="hero-copy">interactive</h1>
-
     <div class="orbit-stage">
       <div class="thumbnail-track">
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-01/900/1125" alt="">
-          <div class="thumb-label"><span>Project 01</span><span>Brand</span></div>
-        </article>
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-02/900/1125" alt="">
-          <div class="thumb-label"><span>Project 02</span><span>UXUI</span></div>
-        </article>
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-03/900/1125" alt="">
-          <div class="thumb-label"><span>Project 03</span><span>Motion</span></div>
-        </article>
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-04/900/1125" alt="">
-          <div class="thumb-label"><span>Project 04</span><span>Commerce</span></div>
-        </article>
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-05/900/1125" alt="">
-          <div class="thumb-label"><span>Project 05</span><span>Platform</span></div>
-        </article>
-        <article class="thumb-card">
-          <img src="https://picsum.photos/seed/agency-thumb-06/900/1125" alt="">
-          <div class="thumb-label"><span>Project 06</span><span>Digital</span></div>
-        </article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-01/900/1280" alt=""></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-05/900/1280" alt=""></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-07/900/1280" alt=""></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
 
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-01/900/1125" alt="">
-          <div class="thumb-label"><span>Project 01</span><span>Brand</span></div>
-        </article>
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-02/900/1125" alt="">
-          <div class="thumb-label"><span>Project 02</span><span>UXUI</span></div>
-        </article>
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-03/900/1125" alt="">
-          <div class="thumb-label"><span>Project 03</span><span>Motion</span></div>
-        </article>
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-04/900/1125" alt="">
-          <div class="thumb-label"><span>Project 04</span><span>Commerce</span></div>
-        </article>
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-05/900/1125" alt="">
-          <div class="thumb-label"><span>Project 05</span><span>Platform</span></div>
-        </article>
-        <article class="thumb-card" aria-hidden="true">
-          <img src="https://picsum.photos/seed/agency-thumb-06/900/1125" alt="">
-          <div class="thumb-label"><span>Project 06</span><span>Digital</span></div>
-        </article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-10/900/1280" alt=""></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-12/900/1280" alt=""></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-14/900/1280" alt=""></article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-17/900/1280" alt=""></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-19/900/1280" alt=""></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-22/900/1280" alt=""></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-24/900/1280" alt=""></article>
+
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-26/900/1280" alt=""></article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
+        <article class="thumb-card is-shop" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-29/900/1280" alt=""></article>
+        <article class="thumb-card is-style" aria-hidden="true"></article>
+        <article class="thumb-card"><img src="https://picsum.photos/seed/baton-thumb-31/900/1280" alt=""></article>
+        <article class="thumb-card is-orange" aria-hidden="true"></article>
       </div>
     </div>
   </main>
@@ -1314,12 +1256,9 @@
 
   <script>
     const main = document.querySelector('.thumbnail-main');
+    const thumbnailTrack = document.querySelector('.thumbnail-track');
     const cards = document.querySelectorAll('.thumb-card');
     const cursor = document.querySelector('.custom-cursor');
-    const sectionIndicator = document.querySelector('.section-indicator');
-    const sectionNodes = Array.from(document.querySelectorAll(
-      '.thumbnail-main, .values-copy-section, .spline-section, .client-cases-section, .outcome-section, .placeholder-section, .contact-section'
-    ));
     const clientCasesSection = document.querySelector('.client-cases-section');
     const clientCasesTrack = document.querySelector('.client-cases-track');
     const outcomeSection = document.querySelector('.outcome-section');
@@ -1327,8 +1266,6 @@
     const outcomeCopy = document.querySelector('.outcome-copy');
     const outcomeOrb = document.querySelector('.outcome-orb');
     const splineSection = document.querySelector('.spline-section');
-    const nextSection = document.querySelector('.placeholder-section');
-    const previousSection = document.querySelector('.client-cases-section');
     const clientPreviousSection = document.querySelector('.spline-section');
     const clientNextSection = document.querySelector('.outcome-section');
     const serviceItems = document.querySelectorAll('.service-item.is-hoverable');
@@ -1345,9 +1282,6 @@
     let outcomeLastWheelAt = 0;
     let outcomeLastWheelDirection = 0;
     let outcomeLastStageDirection = 0;
-    let outcomeReverseEntryLocked = false;
-    let outcomeReverseEntryUntil = 0;
-    let lastScrollY = window.scrollY;
     let splineEntryLocked = false;
     let splineEntryUntil = 0;
     let touchStartY = 0;
@@ -1360,10 +1294,6 @@
     let clientSnapTimer;
     let clientLastWheelAt = 0;
     let clientLastWheelDirection = 0;
-    let activeSectionIndex = -1;
-    let indicatorTicking = false;
-    const outcomeMomentumIdleMs = 180;
-    const outcomeReverseEntryLockMs = 520;
     const splineEntryLockMs = 620;
     const clientMomentumIdleMs = 180;
     const clientEdgeThreshold = .96;
@@ -1437,68 +1367,6 @@
         autoplay: true,
         path: 'uploads/Progress of loading hand.json'
       });
-    }
-
-    function setActiveSection(index) {
-      if (!sectionIndicator || index === activeSectionIndex) return;
-
-      activeSectionIndex = index;
-      Array.from(sectionIndicator.children).forEach((button, buttonIndex) => {
-        const isActive = buttonIndex === index;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-current', isActive ? 'true' : 'false');
-      });
-    }
-
-    function updateSectionIndicator() {
-      indicatorTicking = false;
-      if (!sectionNodes.length) return;
-
-      const viewportCenter = window.innerHeight / 2;
-      let nearestIndex = 0;
-      let nearestDistance = Infinity;
-
-      sectionNodes.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const sectionCenter = rect.top + rect.height / 2;
-        const containsViewportCenter = rect.top <= viewportCenter && rect.bottom >= viewportCenter;
-        const distance = containsViewportCenter ? 0 : Math.abs(sectionCenter - viewportCenter);
-
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
-        }
-      });
-
-      setActiveSection(nearestIndex);
-    }
-
-    function requestSectionIndicatorUpdate() {
-      if (indicatorTicking) return;
-
-      indicatorTicking = true;
-      requestAnimationFrame(updateSectionIndicator);
-    }
-
-    function buildSectionIndicator() {
-      if (!sectionIndicator) return;
-
-      sectionNodes.forEach((section, index) => {
-        const button = document.createElement('button');
-        const label = section.getAttribute('aria-label') || `Section ${index + 1}`;
-
-        button.type = 'button';
-        button.setAttribute('aria-label', `${index + 1}번 섹션으로 이동: ${label}`);
-        button.addEventListener('click', () => {
-          outcomeScrollLocked = false;
-          outcomeBoundaryLock = false;
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setActiveSection(index);
-        });
-        sectionIndicator.appendChild(button);
-      });
-
-      updateSectionIndicator();
     }
 
     function runScrollAnimation(direction) {
@@ -1814,101 +1682,12 @@
       return rect.bottom < window.innerHeight - 12 && rect.bottom > window.innerHeight * .28;
     }
 
-    function getOutcomeTop() {
-      return outcomeSection ? outcomeSection.getBoundingClientRect().top + window.scrollY : 0;
-    }
-
-    function lockOutcomeReverseEntry() {
-      const outcomeTop = getOutcomeTop();
-
-      outcomeReverseEntryLocked = true;
-      outcomeReverseEntryUntil = performance.now() + outcomeReverseEntryLockMs;
-      outcomeStage = 1;
-      outcomeLastStageDirection = 0;
-      updateOutcomeProgress(1);
-      window.scrollTo({ top: outcomeTop, behavior: 'auto' });
-      window.setTimeout(() => {
-        if (performance.now() >= outcomeReverseEntryUntil) {
-          outcomeReverseEntryLocked = false;
-        }
-      }, outcomeReverseEntryLockMs);
-    }
-
-    function enforceOutcomeReverseEntryLock() {
-      const currentScrollY = window.scrollY;
-      const outcomeTop = getOutcomeTop();
-      const cameFromBelowIntoOutcome =
-        lastScrollY > outcomeTop + window.innerHeight * .35 &&
-        currentScrollY <= outcomeTop + window.innerHeight * .35;
-
-      if (!outcomeReverseEntryLocked && cameFromBelowIntoOutcome) {
-        lockOutcomeReverseEntry();
-      }
-
-      lastScrollY = window.scrollY;
-
-      if (!outcomeReverseEntryLocked) return;
-      if (performance.now() >= outcomeReverseEntryUntil) {
-        outcomeReverseEntryLocked = false;
-        return;
-      }
-
-      if (window.scrollY < outcomeTop - 2) {
-        window.scrollTo({ top: outcomeTop, behavior: 'auto' });
-      }
-    }
-
-    function captureOutcomeReverseEntry(event) {
-      if (!outcomeSection || event.deltaY >= 0) return;
-
-      const now = performance.now();
-      const outcomeTop = getOutcomeTop();
-      const isAtOrBelowOutcome = window.scrollY >= outcomeTop - 2;
-      const wouldMoveAboveOutcome = window.scrollY + event.deltaY <= outcomeTop + window.innerHeight * .96;
-
-      if (outcomeReverseEntryLocked && now < outcomeReverseEntryUntil) {
-        event.preventDefault();
-        window.scrollTo({ top: outcomeTop, behavior: 'auto' });
-        return;
-      }
-
-      if (isAtOrBelowOutcome && wouldMoveAboveOutcome && window.scrollY > outcomeTop + 2) {
-        event.preventDefault();
-        lockOutcomeReverseEntry();
-      }
-    }
-
-    function releaseOutcomeScroll(target) {
-      if (!target || outcomeScrollLocked) return;
-
-      outcomeScrollLocked = true;
-      target.scrollIntoView({ behavior: 'smooth' });
-      window.setTimeout(() => {
-        outcomeScrollLocked = false;
-      }, 850);
-    }
-
     function handleOutcomeWheel(event) {
       const delta = event.deltaY;
       const direction = Math.sign(delta);
       const now = performance.now();
-      const isSameWheelGesture =
-        direction === outcomeLastWheelDirection &&
-        now - outcomeLastWheelAt < outcomeMomentumIdleMs;
 
       if (!direction) return;
-
-      if (outcomeReverseEntryLocked && now < outcomeReverseEntryUntil) {
-        if (direction < 0) {
-          event.preventDefault();
-          window.scrollTo({ top: getOutcomeTop(), behavior: 'auto' });
-          outcomeLastWheelAt = now;
-          outcomeLastWheelDirection = direction;
-          return;
-        }
-
-        outcomeReverseEntryLocked = false;
-      }
 
       if (outcomeScrollLocked) {
         event.preventDefault();
@@ -1924,9 +1703,6 @@
         outcomeLastStageDirection = 0;
         updateOutcomeProgress(outcomeStage === 0 ? 0 : 1);
         outcomeSection.scrollIntoView({ behavior: 'smooth' });
-        if (direction < 0) {
-          window.setTimeout(lockOutcomeReverseEntry, 860);
-        }
         window.setTimeout(() => {
           outcomeBoundaryLock = true;
           outcomeScrollLocked = false;
@@ -1952,21 +1728,12 @@
       }
 
       if (direction > 0 && outcomeStage >= 1) {
-        event.preventDefault();
-        if (isSameWheelGesture) {
-          outcomeLastWheelAt = now;
-          outcomeLastWheelDirection = direction;
-          return;
-        }
-        releaseOutcomeScroll(nextSection);
         outcomeLastWheelAt = now;
         outcomeLastWheelDirection = direction;
         return;
       }
 
       if (direction < 0 && outcomeStage <= 0) {
-        event.preventDefault();
-        releaseOutcomeScroll(previousSection);
         outcomeLastWheelAt = now;
         outcomeLastWheelDirection = direction;
         return;
@@ -1985,36 +1752,21 @@
     }, { passive: true });
 
     window.addEventListener('wheel', captureSplineEntry, { capture: true, passive: false });
-    window.addEventListener('wheel', captureOutcomeReverseEntry, { capture: true, passive: false });
     window.addEventListener('wheel', handleClientCasesWheel, { passive: false });
     window.addEventListener('wheel', handleOutcomeWheel, { passive: false });
-    window.addEventListener('scroll', requestSectionIndicatorUpdate, { passive: true });
     window.addEventListener('scroll', lockClientEntryBriefly, { passive: true });
     window.addEventListener('scroll', enforceSplineEntryLock, { passive: true });
     window.addEventListener('scroll', snapClientCasesToViewport, { passive: true });
-    window.addEventListener('scroll', enforceOutcomeReverseEntryLock, { passive: true });
     window.addEventListener('resize', () => {
       updateClientCases();
       updateClientCasesActiveState();
       updateOutcomeProgress();
-      requestSectionIndicatorUpdate();
     });
 
     window.addEventListener('touchstart', (event) => {
       touchStartY = event.touches[0].clientY;
       touchStartTarget = event.target;
     }, { passive: true });
-
-    window.addEventListener('touchmove', (event) => {
-      if (!outcomeReverseEntryLocked || performance.now() >= outcomeReverseEntryUntil) return;
-
-      const touchY = event.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
-      if (deltaY < 0) {
-        event.preventDefault();
-        window.scrollTo({ top: getOutcomeTop(), behavior: 'auto' });
-      }
-    }, { passive: false });
 
     window.addEventListener('touchend', (event) => {
       const touchEndY = event.changedTouches[0].clientY;
@@ -2079,15 +1831,9 @@
           return;
         }
 
-        if (touchDirection > 0 && outcomeStage >= 1) {
-          releaseOutcomeScroll(nextSection);
-          return;
-        }
+        if (touchDirection > 0 && outcomeStage >= 1) return;
 
-        if (touchDirection < 0 && outcomeStage <= 0) {
-          releaseOutcomeScroll(previousSection);
-          return;
-        }
+        if (touchDirection < 0 && outcomeStage <= 0) return;
 
         setOutcomeStage(outcomeStage + touchDirection);
         return;
@@ -2097,7 +1843,6 @@
     }, { passive: true });
 
     moveCursor();
-    buildSectionIndicator();
     updateClientCases();
     updateClientCasesActiveState();
     updateOutcomeProgress();
